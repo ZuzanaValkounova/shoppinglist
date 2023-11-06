@@ -25,6 +25,10 @@
       "sys/uuAppWorkspace/initUve": {
         "sysStateList": ["created"],
         "profileList": ["Public", "AwidLicenseOwner"]
+      },
+      "list/create": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
       }
     }
   }

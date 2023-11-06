@@ -29,12 +29,8 @@
     "nameLabel": "Name",
     "initialize": "Initialize"
   },
-  "ShoppingList": {
-    "somethingNew": "<uu5string/> There is something new here"
-  },
   "Menu": {
-    "home": "<uu5string/><Uu5Elements.RichIcon icon=\"uugds-home\" significance={subdued} size=\"l\"/>",
-    "about": "About Application",
-    "list": "Shopping List"
+    "home": "Welcome",
+    "about": "About Application"
   }
 }

@@ -30,8 +30,7 @@
     "initialize": "Inicializovat"
   },
   "Menu": {
-    "home": "<uu5string/><Uu5Elements.RichIcon icon=\"uugds-home\" significance={subdued} size=\"l\"/>",
-    "about": "O aplikaci",
-    "list": "Nákupní list"
+    "home": "Vítejte",
+    "about": "O aplikaci"
   }
 }

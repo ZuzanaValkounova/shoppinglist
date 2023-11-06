@@ -25,6 +25,11 @@
         "realization": "index.html",
         "httpMethod": "GET",
         "type": "UVE"
+      },
+      "list/create": {
+        "realization": "api/controllers/ListController.create",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }
