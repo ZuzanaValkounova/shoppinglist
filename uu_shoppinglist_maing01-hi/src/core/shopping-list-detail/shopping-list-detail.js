@@ -16,7 +16,7 @@ const INITIAL_DATA = {
     { id: Utils.String.generateId(), name: "Cukr" },
     { id: Utils.String.generateId(), name: "Mouka", checked: true },
   ],
-  owner: { id: "8156-5151-6521-0000", name: "Ivo Milota" },
+  owner: { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
 };
 
 // TODO work 1h 45min

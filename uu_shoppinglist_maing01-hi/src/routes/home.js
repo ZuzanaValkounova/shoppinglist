@@ -6,6 +6,7 @@ import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 
 import ShoppingListDetail from "../core/shopping-list-detail/shopping-list-detail";
+import ListOfShoppingLists from "../core/list-of-shopping-lists/list-of-shopping-lists.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -43,7 +44,8 @@ let Home = createVisualComponent({
       <div {...attrs}>
         <RouteBar />
         <div className={Config.Css.css({ padding: "16px 32px" })}>
-          <ShoppingListDetail />
+          <ListOfShoppingLists />
+          {/* <ShoppingListDetail /> */}
         </div>
       </div>
     );
