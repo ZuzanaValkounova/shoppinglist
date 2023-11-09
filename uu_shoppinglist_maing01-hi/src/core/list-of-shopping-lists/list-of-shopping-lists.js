@@ -63,10 +63,17 @@ const ListOfShoppingLists = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { data } = props;
+    const [newLists, setNewLists] = useState(...data);
     const [modalOpen, setModalOpen] = useState(false);
+    const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+    const [currentListId, setCurrentListId] = useState("");
 
     const { identity } = useSession();
 
+    function handleListDelete(id) {
+      id ? alert(id) : null;
+      setCurrentListId("");
+    }
     //@@viewOff:private
 
     //@@viewOn:render
@@ -84,8 +91,36 @@ const ListOfShoppingLists = createVisualComponent({
         }
       >
         {data.map((list, index) => (
-          <ShoppingListTile key={list.id} {...list} identity={identity.uuIdentity} />
+          <ShoppingListTile
+            key={list.id}
+            {...list}
+            identity={identity.uuIdentity}
+            handleListDelete={handleListDelete}
+            setModalOpen={setModalOpen}
+            setCurrentListId={setCurrentListId}
+          />
         ))}
+
+        <Uu5Elements.Dialog
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          header="Confirm deletion?"
+          icon={<Uu5Elements.Svg code="uugdssvg-svg-delete" />}
+          info="This step cannot be undone."
+          actionDirection="horizontal"
+          actionList={[
+            {
+              children: "Cancel",
+              significance: "distinct",
+            },
+            {
+              children: "Delete",
+              onClick: () => handleListDelete(currentListId),
+              colorScheme: "red",
+              significance: "highlighted",
+            },
+          ]}
+        />
       </Uu5Elements.Block>
     );
     //@@viewOff:render

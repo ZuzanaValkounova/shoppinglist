@@ -29,24 +29,35 @@ const ShoppingListTile = createVisualComponent({
 
   render(props) {
     //@@viewOn:private
-    const { name, identity } = props;
+    const { id, owner, name, identity, setModalOpen, setCurrentListId } = props;
     //@@viewOff:private
 
     //@@viewOn:render
     return (
-      <Uu5Elements.Tile
-        onClick={() => {
-          alert("I'm gonna redirect to a real list once I have a database.");
-        }}
-      >
+      <Uu5Elements.Tile>
         {name}
-        <Uu5Elements.Button style={{ float: "right", marginLeft: "5px" }} onClick={() => {}} icon="uugds-delete" />
         <Uu5Elements.Button
           style={{ float: "right", marginLeft: "5px" }}
-          onClick={() => {}}
-          icon="uugdsstencil-uiaction-archive"
+          icon="uugds-pencil"
+          onClick={() => alert(id)}
         />
-        <Uu5Elements.Button style={{ float: "right" }} onClick={() => {}} icon="uugds-pencil" />
+        {identity === owner.id ? (
+          <>
+            <Uu5Elements.Button
+              style={{ float: "right", marginLeft: "5px" }}
+              onClick={() => {}}
+              icon="uugdsstencil-uiaction-archive"
+            />
+            <Uu5Elements.Button
+              style={{ float: "right" }}
+              onClick={() => {
+                setModalOpen(true);
+                setCurrentListId(id);
+              }}
+              icon="uugds-delete"
+            />
+          </>
+        ) : null}
       </Uu5Elements.Tile>
     );
     //@@viewOff:render
