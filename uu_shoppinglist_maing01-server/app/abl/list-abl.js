@@ -6,15 +6,13 @@ const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const Errors = require("../api/errors/list-error.js");
 const Warnings = require("../api/warnings/list-warning.js");
 
-const CREATORS_PROFILE = "Creators";
-
 class ListAbl {
   constructor() {
     this.validator = Validator.load();
     this.dao = DaoFactory.getDao("list");
   }
 
-  async create(dtoIn, authorizationResult) {
+  async create(dtoIn) {
     let uuAppErrorMap = {};
 
     // validation of dtoIn
@@ -27,10 +25,8 @@ class ListAbl {
       Errors.Create.InvalidDtoIn
     );
 
-    const visibility = authorizationResult.getAuthorizedProfiles().includes(CREATORS_PROFILE);
-
     // prepare and return dtoOut
-    const dtoOut = { ...dtoIn, visibility, uuAppErrorMap };
+    const dtoOut = { ...dtoIn, uuAppErrorMap };
     return dtoOut;
   }
 
