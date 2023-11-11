@@ -1,5 +1,6 @@
 //@@viewOn:imports
 import { createVisualComponent, Lsi, useRoute } from "uu5g05";
+import Uu5Elements from "uu5g05-elements";
 import Plus4U5App from "uu_plus4u5g02-app";
 
 import Config from "./config/config.js";
@@ -33,7 +34,10 @@ const RouteBar = createVisualComponent({
     const [, setRoute] = useRoute();
 
     const appActionList = [
-      { children: <Lsi import={importLsi} path={["Menu", "home"]} />, onClick: () => setRoute("home") },
+      {
+        children: <Uu5Elements.Icon icon="uugds-home" style={{ fontSize: "25px" }} />,
+        onClick: () => setRoute("home"),
+      },
     ];
     //@@viewOff:private
 

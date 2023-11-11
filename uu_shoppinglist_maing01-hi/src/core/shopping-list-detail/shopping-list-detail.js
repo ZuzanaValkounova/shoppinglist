@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { createVisualComponent, useSession, useState, Utils } from "uu5g05";
+import { createVisualComponent, useRoute, useSession, useState, Utils } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 import ItemList from "./item-list";
@@ -53,6 +53,7 @@ const ShoppingListDetail = createVisualComponent({
     //@@viewOn:private
     const { data } = props;
 
+    const [route, setRoute] = useRoute();
     const [name, setName] = useState(data.name);
     const [memberList, setMemberList] = useState(data.memberList);
     const [itemList, setItemList] = useState(data.itemList);
@@ -61,6 +62,7 @@ const ShoppingListDetail = createVisualComponent({
 
     const { identity } = useSession();
     const isOwner = identity?.uuIdentity === data.owner.id;
+    const listId = route.params.id;
 
     const uncheckedItemList = [];
     const checkedItemList = [];
@@ -121,6 +123,10 @@ const ShoppingListDetail = createVisualComponent({
         ]}
         headerSeparator={true}
       >
+        <div>
+          Once I am connected to db I will find the list with Id: "{listId}" (list that was clicked) and will provide
+          its data.
+        </div>
         <ItemList
           data={uncheckedItemList}
           onCheck={handleCheckItem}

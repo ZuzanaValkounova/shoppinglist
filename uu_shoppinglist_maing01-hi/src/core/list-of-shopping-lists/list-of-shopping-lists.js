@@ -63,15 +63,20 @@ const ListOfShoppingLists = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { data } = props;
-    const [newLists, setNewLists] = useState(...data);
+    const [newLists, setNewLists] = useState([...data]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [deleteConfirmation, setDeleteConfirmation] = useState(false);
     const [currentListId, setCurrentListId] = useState("");
 
     const { identity } = useSession();
 
     function handleListDelete(id) {
-      id ? alert(id) : null;
+      id
+        ? setNewLists(
+            newLists.filter((obj) => {
+              return obj.id !== id;
+            })
+          )
+        : null;
       setCurrentListId("");
     }
     //@@viewOff:private
@@ -90,7 +95,7 @@ const ListOfShoppingLists = createVisualComponent({
           </>
         }
       >
-        {data.map((list, index) => (
+        {newLists.map((list, index) => (
           <ShoppingListTile
             key={list.id}
             {...list}

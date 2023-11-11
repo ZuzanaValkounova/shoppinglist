@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { createVisualComponent, Tile, useSession } from "uu5g05";
+import { createVisualComponent, Tile, useSession, useRoute, RouteProvider } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 //@@viewOff:imports
@@ -29,6 +29,7 @@ const ShoppingListTile = createVisualComponent({
 
   render(props) {
     //@@viewOn:private
+    const [route, setRoute] = useRoute();
     const { id, owner, name, identity, setModalOpen, setCurrentListId } = props;
     //@@viewOff:private
 
@@ -39,7 +40,7 @@ const ShoppingListTile = createVisualComponent({
         <Uu5Elements.Button
           style={{ float: "right", marginLeft: "5px" }}
           icon="uugds-pencil"
-          onClick={() => alert(id)}
+          onClick={() => setRoute("list", { id })}
         />
         {identity === owner.id ? (
           <>
