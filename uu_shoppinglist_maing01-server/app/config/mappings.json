@@ -30,6 +30,56 @@
         "realization": "api/controllers/ListController.create",
         "httpMethod": "POST",
         "type": "CMD"
+      },
+      "list/list": {
+        "realization": "api/controllers/ListController.list",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "list/listViewable": {
+        "realization": "api/controllers/ListController.listViewable",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "list/get": {
+        "realization": "api/controllers/ListController.get",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "list/delete": {
+        "realization": "api/controllers/ListController.delete",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "list/deleteItem": {
+        "realization": "api/controllers/ListController.deleteItem",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "list/deleteMember": {
+        "realization": "api/controllers/ListController.deleteMember",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "list/update": {
+        "realization": "api/controllers/ListController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "list/updateItem": {
+        "realization": "api/controllers/ListController.updateItem",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "list/addMember": {
+        "realization": "api/controllers/ListController.addMember",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "list/addItem": {
+        "realization": "api/controllers/ListController.addItem",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }
