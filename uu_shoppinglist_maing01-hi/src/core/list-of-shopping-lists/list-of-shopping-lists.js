@@ -3,6 +3,7 @@ import { createVisualComponent, useSession, useState, Utils } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 import ShoppingListTile from "./shopping-list-tile.js";
+import FormCreateList from "./form-create-list.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -10,22 +11,22 @@ const INITIAL_DATA = [
   {
     id: Utils.String.generateId(),
     name: "Kaufland",
-    memberList: [{ id: "m01", name: "Karel Omáčka" }],
-    itemList: [
+    members: [{ id: "m01", name: "Karel Omáčka" }],
+    items: [
       { id: Utils.String.generateId(), name: "Cukr" },
       { id: Utils.String.generateId(), name: "Mouka", checked: true },
     ],
-    owner: { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
+    owner: { id: "123-456", name: "Zuzana Valkounová" },
     archived: false,
   },
   {
     id: Utils.String.generateId(),
     name: "Billa",
-    memberList: [
+    members: [
       { id: "m01", name: "Karel Omáčka" },
-      { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
+      { id: "123-456", name: "Zuzana Valkounová" },
     ],
-    itemList: [
+    items: [
       { id: Utils.String.generateId(), name: "Cukr" },
       { id: Utils.String.generateId(), name: "Mouka", checked: true },
     ],
@@ -35,12 +36,12 @@ const INITIAL_DATA = [
   {
     id: Utils.String.generateId(),
     name: "Albert",
-    memberList: [{ id: "m01", name: "Karel Omáčka" }],
-    itemList: [
+    members: [{ id: "m01", name: "Karel Omáčka" }],
+    items: [
       { id: Utils.String.generateId(), name: "Cukr" },
       { id: Utils.String.generateId(), name: "Mouka", checked: true },
     ],
-    owner: { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
+    owner: { id: "123-456", name: "Zuzana Valkounová" },
     archived: true,
   },
 ];
@@ -76,8 +77,10 @@ const ListOfShoppingLists = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { data } = props;
+
     const [newLists, setNewLists] = useState([...data]);
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpenCreateList, setModalOpenCreateList] = useState(false);
     const [currentListId, setCurrentListId] = useState("");
     const [hideArchived, setHideArchived] = useState(true);
 
@@ -106,7 +109,12 @@ const ListOfShoppingLists = createVisualComponent({
     return (
       <Uu5Elements.Block
         header={
-          <Uu5Elements.Button style={{ float: "right", marginLeft: "5px" }} onClick={() => {}}>
+          <Uu5Elements.Button
+            style={{ float: "right", marginLeft: "5px" }}
+            onClick={() => {
+              setModalOpenCreateList(true);
+            }}
+          >
             Create New List
           </Uu5Elements.Button>
         }
@@ -124,6 +132,21 @@ const ListOfShoppingLists = createVisualComponent({
             />
           ) : null
         )}
+
+        <Uu5Elements.Modal
+          {...props}
+          header="Create New List"
+          open={modalOpenCreateList}
+          onClose={() => setModalOpenCreateList(false)}
+        >
+          <FormCreateList
+            setNewLists={setNewLists}
+            newLists={newLists}
+            setModalOpenCreateList={setModalOpenCreateList}
+            idName={identity.name}
+            uuId={identity.uuIdentity}
+          />
+        </Uu5Elements.Modal>
 
         <Uu5Elements.Dialog
           open={modalOpen}

@@ -42,7 +42,7 @@ const ShoppingListTile = createVisualComponent({
           icon="uugds-pencil"
           onClick={() => setRoute("list", { id })}
         />
-        {identity === owner.id ? (
+        {owner.id === "123-456" /* with data from BE it will be: owner.id === identity */ ? (
           <>
             <Uu5Elements.Button
               style={{ float: "right", marginLeft: "5px" }}
