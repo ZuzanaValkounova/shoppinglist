@@ -16,6 +16,7 @@ const INITIAL_DATA = [
       { id: Utils.String.generateId(), name: "Mouka", checked: true },
     ],
     owner: { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
+    archived: false,
   },
   {
     id: Utils.String.generateId(),
@@ -29,6 +30,18 @@ const INITIAL_DATA = [
       { id: Utils.String.generateId(), name: "Mouka", checked: true },
     ],
     owner: { id: "1234-5678", name: "Someone Else" },
+    archived: false,
+  },
+  {
+    id: Utils.String.generateId(),
+    name: "Albert",
+    memberList: [{ id: "m01", name: "Karel Omáčka" }],
+    itemList: [
+      { id: Utils.String.generateId(), name: "Cukr" },
+      { id: Utils.String.generateId(), name: "Mouka", checked: true },
+    ],
+    owner: { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
+    archived: true,
   },
 ];
 //@@viewOff:constants
@@ -66,6 +79,7 @@ const ListOfShoppingLists = createVisualComponent({
     const [newLists, setNewLists] = useState([...data]);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentListId, setCurrentListId] = useState("");
+    const [hideArchived, setHideArchived] = useState(true);
 
     const { identity } = useSession();
 
@@ -79,32 +93,37 @@ const ListOfShoppingLists = createVisualComponent({
         : null;
       setCurrentListId("");
     }
+
+    function handleListArchive(index) {
+      setNewLists(([...newLists]) => {
+        newLists[index].archived = !newLists[index].archived;
+        return newLists;
+      });
+    }
     //@@viewOff:private
 
     //@@viewOn:render
     return (
       <Uu5Elements.Block
         header={
-          <>
-            <Uu5Elements.Button style={{ float: "right", marginLeft: "5px" }} onClick={() => {}}>
-              Create New List
-            </Uu5Elements.Button>
-            <Uu5Elements.Button style={{ float: "right" }} onClick={() => {}}>
-              View Archived
-            </Uu5Elements.Button>
-          </>
+          <Uu5Elements.Button style={{ float: "right", marginLeft: "5px" }} onClick={() => {}}>
+            Create New List
+          </Uu5Elements.Button>
         }
       >
-        {newLists.map((list, index) => (
-          <ShoppingListTile
-            key={list.id}
-            {...list}
-            identity={identity.uuIdentity}
-            handleListDelete={handleListDelete}
-            setModalOpen={setModalOpen}
-            setCurrentListId={setCurrentListId}
-          />
-        ))}
+        {newLists.map((list, index) =>
+          !list.archived ? (
+            <ShoppingListTile
+              key={list.id}
+              index={index}
+              {...list}
+              identity={identity.uuIdentity}
+              setModalOpen={setModalOpen}
+              setCurrentListId={setCurrentListId}
+              handleListArchive={handleListArchive}
+            />
+          ) : null
+        )}
 
         <Uu5Elements.Dialog
           open={modalOpen}
@@ -126,6 +145,31 @@ const ListOfShoppingLists = createVisualComponent({
             },
           ]}
         />
+
+        <br />
+        <Uu5Elements.Toggle
+          label="Archived"
+          value={!hideArchived}
+          onChange={() => {
+            setHideArchived(!hideArchived);
+          }}
+        />
+        <Uu5Elements.Line significance="subdued" />
+        <Uu5Elements.CollapsibleBox collapsed={hideArchived}>
+          {newLists.map((list, index) =>
+            list.archived ? (
+              <ShoppingListTile
+                key={list.id}
+                index={index}
+                {...list}
+                identity={identity.uuIdentity}
+                setModalOpen={setModalOpen}
+                setCurrentListId={setCurrentListId}
+                handleListArchive={handleListArchive}
+              />
+            ) : null
+          )}
+        </Uu5Elements.CollapsibleBox>
       </Uu5Elements.Block>
     );
     //@@viewOff:render
