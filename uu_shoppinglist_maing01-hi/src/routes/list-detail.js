@@ -5,7 +5,7 @@ import { withRoute } from "uu_plus4u5g02-app";
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 
-import ListOfShoppingLists from "../core/list-of-shopping-lists/list-of-shopping-lists.js";
+import ShoppingListDetail from "../core/shopping-list-detail/shopping-list-detail";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -17,9 +17,9 @@ import ListOfShoppingLists from "../core/list-of-shopping-lists/list-of-shopping
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-let Home = createVisualComponent({
+let ListDetail = createVisualComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "Home",
+  uu5Tag: Config.TAG + "ListDetail",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -31,9 +31,6 @@ let Home = createVisualComponent({
   //@@viewOff:defaultProps
 
   render(props) {
-    //@@viewOn:private
-    //@@viewOff:private
-
     //@@viewOn:interface
     //@@viewOff:interface
 
@@ -43,7 +40,7 @@ let Home = createVisualComponent({
       <div {...attrs}>
         <RouteBar />
         <div className={Config.Css.css({ padding: "16px 32px" })}>
-          <ListOfShoppingLists />
+          <ShoppingListDetail />
         </div>
       </div>
     );
@@ -51,9 +48,9 @@ let Home = createVisualComponent({
   },
 });
 
-Home = withRoute(Home, { authenticated: true });
+ListDetail = withRoute(ListDetail, { authenticated: true });
 
 //@@viewOn:exports
-export { Home };
-export default Home;
+export { ListDetail };
+export default ListDetail;
 //@@viewOff:exports
