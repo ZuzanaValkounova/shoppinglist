@@ -25,8 +25,11 @@ class ListAbl {
       Errors.Create.InvalidDtoIn
     );
 
+    dtoIn.awid = awid;
+    const list = await this.dao.create(dtoIn);
+
     // prepare and return dtoOut
-    const dtoOut = { ...dtoIn, uuAppErrorMap };
+    const dtoOut = { ...list, uuAppErrorMap };
     return dtoOut;
   }
 

@@ -3,7 +3,7 @@ const ListAbl = require("../../abl/list-abl.js");
 
 class ListController {
   create(ucEnv) {
-    return ListAbl.create(ucEnv.getDtoIn());
+    return ListAbl.create(ucEnv.getDtoIn(), ucEnv.getDtoIn().getAwid());
   }
   list(ucEnv) {
     return ListAbl.list(ucEnv.getDtoIn());
