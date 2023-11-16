@@ -16,7 +16,7 @@ const listListDtoInType = shape({
 });
 
 const listListViewableDtoInType = shape({
-  uuIdentity: uuIdentity().isRequired(),
+  // uuIdentity: uuIdentity().isRequired(), //I either have this here and send it from FE or I take it in BE
   pageInfo: shape({
     pageIndex: integer(0, 1000000000),
     pageSize: integer(1, 1000000000),
@@ -50,8 +50,8 @@ const listUpdateDtoInType = shape({
 const listUpdateItemDtoInType = shape({
   listId: id().isRequired(),
   itemId: id().isRequired(),
-  itemName: string(1, 200),
-  solved: boolean(),
+  itemName: string(1, 200).isRequired(),
+  solved: boolean().isRequired(),
 });
 
 const listAddMemberDtoInType = shape({
