@@ -5,6 +5,8 @@ import Config from "../config/config.js";
 import ItemList from "./item-list";
 import TextInput from "./text-input";
 import MemberManager from "./member-manager";
+import { useAlertBus } from "uu5g05-elements";
+// import DetailProvider from "../core/shopping-list-detail/detail-provider.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -52,6 +54,7 @@ const ShoppingListDetail = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { data } = props;
+    const { addAlert } = useAlertBus();
 
     const [route, setRoute] = useRoute();
     const [name, setName] = useState(data.name);
@@ -63,6 +66,7 @@ const ShoppingListDetail = createVisualComponent({
     const { identity } = useSession();
     const isOwner = identity?.uuIdentity === data.owner.id;
     const listId = route.params.id;
+    // const detailObject = props.detailDataObject.handlerMap.load(listId);
 
     const uncheckedItemList = [];
     const checkedItemList = [];
@@ -72,6 +76,11 @@ const ShoppingListDetail = createVisualComponent({
     uncheckedItemList.push({});
 
     const [checkedOpen, setCheckedOpen] = useState(false);
+
+    // useEffect(() => {
+    //   console.log(props.detailDataObject.handlerMap.load(listId));
+    //   return;
+    // }, []);
 
     function handleCheckItem(id) {
       if (id) {

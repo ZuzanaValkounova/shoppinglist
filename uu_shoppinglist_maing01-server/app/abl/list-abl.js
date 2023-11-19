@@ -129,7 +129,7 @@ class ListAbl {
     const result = await this.dao.delete(awid, dtoIn.id);
 
     // prepare and return dtoOut
-    const dtoOut = {...result, uuAppErrorMap}
+    const dtoOut = { ...result, uuAppErrorMap };
     return dtoOut;
   }
 
@@ -150,7 +150,7 @@ class ListAbl {
     const result = await this.dao.deleteItem(awid, dtoIn.listId, dtoIn.itemId);
 
     // prepare and return dtoOut
-    const dtoOut = {...result, uuAppErrorMap}
+    const dtoOut = { ...result, uuAppErrorMap };
     return dtoOut;
   }
 
@@ -171,7 +171,7 @@ class ListAbl {
     const result = await this.dao.deleteMember(awid, dtoIn.listId, dtoIn.memberUuId);
 
     // prepare and return dtoOut
-    const dtoOut = {...result, uuAppErrorMap}
+    const dtoOut = { ...result, uuAppErrorMap };
     return dtoOut;
   }
 
@@ -191,7 +191,7 @@ class ListAbl {
     let list = {};
 
     if (dtoIn.name) list.name = dtoIn.name;
-    if (dtoIn.archived) list.archived = dtoIn.archived;
+    if ("archived" in dtoIn) list.archived = dtoIn.archived;
 
     //fetch from db and update
     const dtoOut = await this.dao.update(awid, dtoIn.id, list);
@@ -235,7 +235,7 @@ class ListAbl {
       Errors.AddMember.InvalidDtoIn
     );
 
-    const member = { uuId: dtoIn.memberUuId, name: dtoIn.memberName }
+    const member = { uuId: dtoIn.memberUuId, name: dtoIn.memberName };
 
     //add into list in db
     const dtoOut = await this.dao.addMember(awid, dtoIn.listId, member);
@@ -258,7 +258,7 @@ class ListAbl {
       Errors.AddItem.InvalidDtoIn
     );
 
-    const item = {id: dtoIn.itemId, name: dtoIn.itemName, solved: dtoIn.solved }
+    const item = { id: dtoIn.itemId, name: dtoIn.itemName, solved: dtoIn.solved };
 
     //add into list in db
     const dtoOut = await this.dao.addItem(awid, dtoIn.listId, item);

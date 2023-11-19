@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { createVisualComponent, useRoute } from "uu5g05";
+import { PropTypes, createVisualComponent, useRoute } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 //@@viewOff:imports
@@ -20,7 +20,9 @@ const ShoppingListTile = createVisualComponent({
   //@@viewOff:statics
 
   //@@viewOn:propTypes
-  propTypes: {},
+  propTypes: {
+    listDataObject: PropTypes.object.isRequired,
+  },
   //@@viewOff:propTypes
 
   //@@viewOn:defaultProps
@@ -30,26 +32,28 @@ const ShoppingListTile = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const [route, setRoute] = useRoute();
-    const { id, owner, archived, name, identity, setModalOpen, setCurrentListId, handleListArchive, index } = props;
+    const { identity, setModalOpen, setCurrentListId, handleListArchive } = props;
+    const list = props.listDataObject.data;
+    let { id } = list;
     //@@viewOff:private
 
     //@@viewOn:render
     return (
       <Uu5Elements.Tile>
-        {name}
+        {list.name}
         <Uu5Elements.Button
           style={{ float: "right", marginLeft: "5px" }}
           icon="uugds-pencil"
           onClick={() => setRoute("list", { id })}
         />
-        {owner.id === "123-456" /* with data from BE it will be: owner.id === identity */ ? (
+        {list.creatorUuId === identity ? (
           <>
             <Uu5Elements.Button
               style={{ float: "right", marginLeft: "5px" }}
               onClick={() => {
-                handleListArchive(index);
+                handleListArchive(props.listDataObject);
               }}
-              icon={archived ? "uugds-upload" : "uugdsstencil-uiaction-archive"}
+              icon={list.archived ? "uugds-upload" : "uugdsstencil-uiaction-archive"}
             />
             <Uu5Elements.Button
               style={{ float: "right" }}

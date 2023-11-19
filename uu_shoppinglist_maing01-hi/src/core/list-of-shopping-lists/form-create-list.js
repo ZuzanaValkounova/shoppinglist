@@ -30,23 +30,14 @@ const FormCreateList = createVisualComponent({
 
   render(props) {
     //@@viewOn:private
-    const { newLists, setNewLists, setModalOpenCreateList, idName, uuId } = props;
+    const { setModalOpenCreateList, handleListCreate } = props;
     //@@viewOff:private
 
     //@@viewOn:render
     return (
       <Uu5Forms.Form
         onSubmit={(e) => {
-          let newList = {
-            id: Utils.String.generateId(),
-            name: e.data.value.listName,
-            members: [],
-            items: [],
-            owner: { id: "123-456", name: idName } /* When connected to db it will be: { id: uuId, name: idName } 
-                                                      Now in this state for easier view of different list options*/,
-            archived: false,
-          };
-          setNewLists([...newLists, newList]);
+          handleListCreate(e);
           setModalOpenCreateList(false);
         }}
       >
