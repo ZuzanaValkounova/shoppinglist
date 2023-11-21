@@ -6,7 +6,6 @@ import ItemList from "./item-list";
 import TextInput from "./text-input";
 import MemberManager from "./member-manager";
 import { useAlertBus } from "uu5g05-elements";
-// import DetailProvider from "../core/shopping-list-detail/detail-provider.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -54,6 +53,7 @@ const ShoppingListDetail = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { data } = props;
+    const listDataObject = props.detailDataObject;
     const { addAlert } = useAlertBus();
 
     const [route, setRoute] = useRoute();
@@ -135,6 +135,7 @@ const ShoppingListDetail = createVisualComponent({
         <div>
           Once I am connected to db I will find the list with Id: "{listId}" (list that was clicked) and will provide
           its data.
+          {JSON.stringify(listDataObject)}
         </div>
         <ItemList
           data={uncheckedItemList}

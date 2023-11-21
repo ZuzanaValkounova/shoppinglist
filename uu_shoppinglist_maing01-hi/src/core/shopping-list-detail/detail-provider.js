@@ -24,11 +24,15 @@ const DetailProvider = createComponent({
     const listId = route.params.id;
 
     const detailDataObject = useDataObject({
+      initialDtoIn: listId,
       handlerMap: {
         load: handleLoad,
-        create: handleCreate,
-        delete: handleDelete,
+        deleteItem: handleDeleteItem,
+        deleteMember: handleDeleteMember,
         update: handleUpdate,
+        updateItem: handleUpdateItem,
+        addItem: handleAddItem,
+        addMember: handleAddMember,
       },
     });
 
@@ -37,18 +41,34 @@ const DetailProvider = createComponent({
       return Calls.Shoppinglist.get(dtoIn);
     }
 
-    function handleCreate(values) {
-      return Calls.Shoppinglist.create(values);
+    function handleDeleteItem(id) {
+      const dtoIn = { id };
+      return Calls.Shoppinglist.deleteItem(dtoIn, props.baseUri);
     }
 
-    async function handleUpdate(list, archived) {
+    function handleDeleteMember(id) {
+      const dtoIn = { id };
+      return Calls.Shoppinglist.deleteMember(dtoIn, props.baseUri);
+    }
+
+    function handleUpdate(list, archived) {
       const dtoIn = { id: list.id, name: list.name, archived };
       return Calls.Shoppinglist.update(dtoIn, props.baseUri);
     }
 
-    function handleDelete(id) {
-      const dtoIn = { id };
-      return Calls.Shoppinglist.delete(dtoIn, props.baseUri);
+    function handleUpdateItem(list, archived) {
+      const dtoIn = { id: list.id, name: list.name, archived };
+      return Calls.Shoppinglist.updateItem(dtoIn, props.baseUri);
+    }
+
+    function handleAddItem(list, archived) {
+      const dtoIn = { id: list.id, name: list.name, archived };
+      return Calls.Shoppinglist.addItem(dtoIn, props.baseUri);
+    }
+
+    function handleAddMember(list, archived) {
+      const dtoIn = { id: list.id, name: list.name, archived };
+      return Calls.Shoppinglist.addMember(dtoIn, props.baseUri);
     }
 
     useEffect(() => {

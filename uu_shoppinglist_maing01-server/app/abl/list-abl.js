@@ -2,6 +2,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
+const ObjectId = require("mongodb").ObjectId;
 
 const Errors = require("../api/errors/list-error.js");
 const Warnings = require("../api/warnings/list-warning.js");
@@ -258,7 +259,7 @@ class ListAbl {
       Errors.AddItem.InvalidDtoIn
     );
 
-    const item = { id: dtoIn.itemId, name: dtoIn.itemName, solved: dtoIn.solved };
+    const item = { id: new ObjectId(), name: dtoIn.itemName, solved: dtoIn.solved };
 
     //add into list in db
     const dtoOut = await this.dao.addItem(awid, dtoIn.listId, item);

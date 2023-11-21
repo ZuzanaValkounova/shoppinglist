@@ -62,7 +62,7 @@ const listAddMemberDtoInType = shape({
 
 const listAddItemDtoInType = shape({
   listId: id().isRequired(),
-  itemId: id().isRequired(),
+  // itemId: id().isRequired(),
   itemName: string(1, 200).isRequired(),
   solved: boolean().isRequired(),
 });

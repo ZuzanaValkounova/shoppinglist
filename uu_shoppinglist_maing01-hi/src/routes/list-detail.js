@@ -6,7 +6,7 @@ import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 
 import ShoppingListDetail from "../core/shopping-list-detail/shopping-list-detail";
-
+import DetailProvider from "../core/shopping-list-detail/detail-provider.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -41,9 +41,15 @@ let ListDetail = createVisualComponent({
     return (
       <div {...attrs}>
         <RouteBar />
-        <div className={Config.Css.css({ padding: "16px 32px" })}>
-          <ShoppingListDetail id={route.params.id} />
-        </div>
+        <DetailProvider>
+          {(detailDataObject) => (
+            <RouteController routeDataObject={detailDataObject}>
+              <div className={Config.Css.css({ padding: "16px 32px" })}>
+                <ShoppingListDetail detailDataObject={detailDataObject} />
+              </div>
+            </RouteController>
+          )}
+        </DetailProvider>
       </div>
     );
     //@@viewOff:render
