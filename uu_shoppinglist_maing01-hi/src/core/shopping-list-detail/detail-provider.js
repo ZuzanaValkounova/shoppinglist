@@ -41,8 +41,8 @@ const DetailProvider = createComponent({
       return Calls.Shoppinglist.get(dtoIn);
     }
 
-    function handleDeleteItem(id) {
-      const dtoIn = { id };
+    function handleDeleteItem(listId, itemId) {
+      const dtoIn = { listId, itemId };
       return Calls.Shoppinglist.deleteItem(dtoIn, props.baseUri);
     }
 
@@ -51,8 +51,8 @@ const DetailProvider = createComponent({
       return Calls.Shoppinglist.deleteMember(dtoIn, props.baseUri);
     }
 
-    function handleUpdate(list, archived) {
-      const dtoIn = { id: list.id, name: list.name, archived };
+    function handleUpdate(list) {
+      const dtoIn = { id: list.id, name: list.name };
       return Calls.Shoppinglist.update(dtoIn, props.baseUri);
     }
 

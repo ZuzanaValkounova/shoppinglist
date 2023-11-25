@@ -96,9 +96,9 @@ const ListOfShoppingLists = createVisualComponent({
     }
 
     async function handleListArchive(listDataObject) {
-      let archived = !listDataObject.data.archived;
+      listDataObject.data.archived = !listDataObject.data.archived
       try {
-        await listDataObject.handlerMap.update(listDataObject.data, archived);
+        await listDataObject.handlerMap.update(listDataObject.data);
       } catch (error) {
         addAlert({
           message: `List update failed.`,

@@ -28,22 +28,24 @@ const ItemList = createVisualComponent({
   //@@viewOff:defaultProps
 
   render(props) {
-    const { data, onCheck, onNameChange, onDelete } = props;
+    const { data, onCheck, onNameChange, onDelete, listChecked } = props;
 
     const attrs = Utils.VisualComponent.getAttrs(props, Css.main());
 
     //@@viewOn:render
     return (
       <div {...attrs}>
-        {data.map((item, i) => (
-          <Item
-            key={item.id || i}
-            {...item}
-            onCheck={() => onCheck(item.id)}
-            onNameChange={(newName) => onNameChange(item.id, newName)}
-            onDelete={onDelete ? () => onDelete(item.id) : undefined}
-          />
-        ))}
+        {data.map((item, i) =>
+          item.solved && listChecked ? (
+            <Item
+              key={item.id || i}
+              {...item}
+              onCheck={() => onCheck(item.id)}
+              onNameChange={(newName) => onNameChange(item.id, newName)}
+              onDelete={onDelete ? () => onDelete(item.id) : undefined}
+            />
+          ) : null
+        )}
       </div>
     );
     //@@viewOff:render

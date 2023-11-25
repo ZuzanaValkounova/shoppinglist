@@ -20,15 +20,15 @@ class ListMongo extends UuObjectDao {
   }
   async delete(awid, id) {
     const filter = { awid, id };
-    await super.deleteOne(filter);
+    return await super.deleteOne(filter);
   }
   async deleteItem(awid, listId, itemId) {
     const filter = { awid, id: listId };
-    await super.findOneAndUpdate(filter, { $pull: { items: { id: itemId } } }, true);
+    return await super.findOneAndUpdate(filter, { $pull: { items: { id: itemId } } }, true);
   }
   async deleteMember(awid, listId, memberUuId) {
     const filter = { awid, id: listId };
-    await super.findOneAndUpdate(filter, { $pull: { members: { uuId: memberUuId } } }, true);
+    return await super.findOneAndUpdate(filter, { $pull: { members: { uuId: memberUuId } } }, true);
   }
   async update(awid, id, list) {
     const filter = { awid, id };

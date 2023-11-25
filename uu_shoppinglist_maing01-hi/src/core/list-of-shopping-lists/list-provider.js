@@ -40,8 +40,8 @@ const ListProvider = createComponent({
       return Calls.Shoppinglist.create(values);
     }
 
-    async function handleUpdate(list, archived) {
-      const dtoIn = { id: list.id, name: list.name, archived };
+    async function handleUpdate(list) {
+      const dtoIn = { id: list.id, archived: list.archived };
       return Calls.Shoppinglist.update(dtoIn, props.baseUri);
     }
 

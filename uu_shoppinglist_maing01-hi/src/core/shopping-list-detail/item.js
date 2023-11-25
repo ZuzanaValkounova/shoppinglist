@@ -26,7 +26,7 @@ const Item = createVisualComponent({
   //@@viewOff:defaultProps
 
   render(props) {
-    const { id, name, checked, onCheck, onNameChange, onDelete } = props;
+    const { id, name, checked, onCheck, onNameChange, onDelete, item } = props;
 
     //@@viewOn:render
     return (
@@ -36,7 +36,7 @@ const Item = createVisualComponent({
       >
         <Uu5Forms.Checkbox.Input
           icon={checked ? "uugds-check" : undefined}
-          onClick={onCheck}
+          onClick={() => onCheck(item)}
           className={Css.check()}
           disabled={!id}
         />
