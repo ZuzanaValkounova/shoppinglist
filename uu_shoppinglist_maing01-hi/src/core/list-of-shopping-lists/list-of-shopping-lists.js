@@ -1,50 +1,13 @@
 //@@viewOn:imports
-import { createVisualComponent, useSession, useState, Utils } from "uu5g05";
+import { createVisualComponent, useSession, useState } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 import ShoppingListTile from "./shopping-list-tile.js";
 import FormCreateList from "./form-create-list.js";
+import { useAlertBus } from "uu5g05-elements";
 //@@viewOff:imports
 
 //@@viewOn:constants
-const INITIAL_DATA = [
-  {
-    id: Utils.String.generateId(),
-    name: "Kaufland",
-    members: [{ id: "m01", name: "Karel Omáčka" }],
-    items: [
-      { id: Utils.String.generateId(), name: "Cukr" },
-      { id: Utils.String.generateId(), name: "Mouka", checked: true },
-    ],
-    owner: { id: "123-456", name: "Zuzana Valkounová" },
-    archived: false,
-  },
-  {
-    id: Utils.String.generateId(),
-    name: "Billa",
-    members: [
-      { id: "m01", name: "Karel Omáčka" },
-      { id: "123-456", name: "Zuzana Valkounová" },
-    ],
-    items: [
-      { id: Utils.String.generateId(), name: "Cukr" },
-      { id: Utils.String.generateId(), name: "Mouka", checked: true },
-    ],
-    owner: { id: "1234-5678", name: "Someone Else" },
-    archived: false,
-  },
-  {
-    id: Utils.String.generateId(),
-    name: "Albert",
-    members: [{ id: "m01", name: "Karel Omáčka" }],
-    items: [
-      { id: Utils.String.generateId(), name: "Cukr" },
-      { id: Utils.String.generateId(), name: "Mouka", checked: true },
-    ],
-    owner: { id: "123-456", name: "Zuzana Valkounová" },
-    archived: true,
-  },
-];
 //@@viewOff:constants
 
 //@@viewOn:css
@@ -69,16 +32,13 @@ const ListOfShoppingLists = createVisualComponent({
   //@@viewOff:propTypes
 
   //@@viewOn:defaultProps
-  defaultProps: {
-    data: INITIAL_DATA,
-  },
   //@@viewOff:defaultProps
 
   render(props) {
     //@@viewOn:private
-    const { data } = props;
+    const shoppinglistList = props.shoppinglistDataList.data.filter((item) => item !== undefined);
+    const { addAlert } = useAlertBus();
 
-    const [newLists, setNewLists] = useState([...data]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOpenCreateList, setModalOpenCreateList] = useState(false);
     const [currentListId, setCurrentListId] = useState("");
@@ -86,22 +46,65 @@ const ListOfShoppingLists = createVisualComponent({
 
     const { identity } = useSession();
 
-    function handleListDelete(id) {
-      id
-        ? setNewLists(
-            newLists.filter((obj) => {
-              return obj.id !== id;
-            })
-          )
-        : null;
-      setCurrentListId("");
+    async function handleListCreate(e) {
+      let newList = {
+        name: e.data.value.listName,
+        members: [],
+        items: [],
+        archived: false,
+      };
+      let result;
+      try {
+        result = await props.shoppinglistDataList.handlerMap.create(newList);
+      } catch (error) {
+        addAlert({
+          header: "List creation failed!",
+          message: error.message,
+          priority: "error",
+        });
+        return;
+      }
+
+      addAlert({
+        message: `List ${result.name} has been created.`,
+        priority: "success",
+        durationMs: 4000,
+      });
+
+      props.shoppinglistDataList.handlerMap.load();
     }
 
-    function handleListArchive(index) {
-      setNewLists(([...newLists]) => {
-        newLists[index].archived = !newLists[index].archived;
-        return newLists;
+    async function handleListDelete(id) {
+      try {
+        await props.shoppinglistDataList.handlerMap.delete(id);
+      } catch (error) {
+        addAlert({
+          message: `List delete failed!`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
+      }
+      addAlert({
+        message: `List has been deleted.`,
+        priority: "success",
+        durationMs: 4000,
       });
+
+      props.shoppinglistDataList.handlerMap.load();
+    }
+
+    async function handleListArchive(listDataObject) {
+      listDataObject.data.archived = !listDataObject.data.archived;
+      try {
+        await listDataObject.handlerMap.update(listDataObject.data);
+      } catch (error) {
+        addAlert({
+          message: `List update failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+      }
     }
     //@@viewOff:private
 
@@ -119,12 +122,12 @@ const ListOfShoppingLists = createVisualComponent({
           </Uu5Elements.Button>
         }
       >
-        {newLists.map((list, index) =>
-          !list.archived ? (
+        {shoppinglistList.map((list, index) =>
+          !list.data.archived ? (
             <ShoppingListTile
-              key={list.id}
+              key={list.data.id}
               index={index}
-              {...list}
+              listDataObject={list}
               identity={identity.uuIdentity}
               setModalOpen={setModalOpen}
               setCurrentListId={setCurrentListId}
@@ -132,22 +135,14 @@ const ListOfShoppingLists = createVisualComponent({
             />
           ) : null
         )}
-
         <Uu5Elements.Modal
           {...props}
           header="Create New List"
           open={modalOpenCreateList}
           onClose={() => setModalOpenCreateList(false)}
         >
-          <FormCreateList
-            setNewLists={setNewLists}
-            newLists={newLists}
-            setModalOpenCreateList={setModalOpenCreateList}
-            idName={identity.name}
-            uuId={identity.uuIdentity}
-          />
+          <FormCreateList setModalOpenCreateList={setModalOpenCreateList} handleListCreate={handleListCreate} />
         </Uu5Elements.Modal>
-
         <Uu5Elements.Dialog
           open={modalOpen}
           onClose={() => setModalOpen(false)}
@@ -168,7 +163,6 @@ const ListOfShoppingLists = createVisualComponent({
             },
           ]}
         />
-
         <br />
         <Uu5Elements.Toggle
           label="Archived"
@@ -179,12 +173,12 @@ const ListOfShoppingLists = createVisualComponent({
         />
         <Uu5Elements.Line significance="subdued" />
         <Uu5Elements.CollapsibleBox collapsed={hideArchived}>
-          {newLists.map((list, index) =>
-            list.archived ? (
+          {shoppinglistList.map((list, index) =>
+            list.data.archived ? (
               <ShoppingListTile
-                key={list.id}
+                key={list.data.id}
                 index={index}
-                {...list}
+                listDataObject={list}
                 identity={identity.uuIdentity}
                 setModalOpen={setModalOpen}
                 setCurrentListId={setCurrentListId}

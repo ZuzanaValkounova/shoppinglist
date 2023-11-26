@@ -32,7 +32,7 @@
       },
       "list/list": {
         "sysStateList": ["active"],
-        "profileList": ["Creators"]
+        "profileList": ["Authorities"]
       },
       "list/listViewable": {
         "sysStateList": ["active"],

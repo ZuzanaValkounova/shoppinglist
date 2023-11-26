@@ -1,11 +1,12 @@
 //@@viewOn:imports
 import { Utils, createVisualComponent } from "uu5g05";
-import { withRoute } from "uu_plus4u5g02-app";
+import { RouteController, withRoute } from "uu_plus4u5g02-app";
 
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 
 import ListOfShoppingLists from "../core/list-of-shopping-lists/list-of-shopping-lists.js";
+import ListProvider from "../core/list-of-shopping-lists/list-provider.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -42,9 +43,15 @@ let Home = createVisualComponent({
     return (
       <div {...attrs}>
         <RouteBar />
-        <div className={Config.Css.css({ padding: "16px 32px" })}>
-          <ListOfShoppingLists />
-        </div>
+        <ListProvider>
+          {(shoppinglistDataList) => (
+            <RouteController routeDataObject={shoppinglistDataList}>
+              <div className={Config.Css.css({ padding: "16px 32px" })}>
+                <ListOfShoppingLists shoppinglistDataList={shoppinglistDataList} />
+              </div>
+            </RouteController>
+          )}
+        </ListProvider>
       </div>
     );
     //@@viewOff:render

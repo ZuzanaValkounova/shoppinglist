@@ -1,10 +1,7 @@
 const listCreateDtoInType = shape({
   name: string(1, 128).isRequired(),
-  members: array(shape({ uuId: uuIdentity().isRequired(), name: string(1, 800).isRequired() }), 100),
-  items: array(
-    shape({ id: id().isRequired(), name: string(1, 200).isRequired(), solved: boolean().isRequired() }),
-    500
-  ),
+  members: array(shape({ uuId: uuIdentity().isRequired(), name: string(1, 800).isRequired() }), 100).isRequired(),
+  items: array(shape({ name: string(1, 200).isRequired(), solved: boolean().isRequired() }), 500).isRequired(),
   archived: boolean().isRequired(),
 });
 
@@ -16,7 +13,7 @@ const listListDtoInType = shape({
 });
 
 const listListViewableDtoInType = shape({
-  uuIdentity: uuIdentity().isRequired(),
+  // currently taking uuIdentity from BE
   pageInfo: shape({
     pageIndex: integer(0, 1000000000),
     pageSize: integer(1, 1000000000),
@@ -50,8 +47,8 @@ const listUpdateDtoInType = shape({
 const listUpdateItemDtoInType = shape({
   listId: id().isRequired(),
   itemId: id().isRequired(),
-  itemName: string(1, 200),
-  solved: boolean(),
+  itemName: string(1, 200).isRequired(),
+  solved: boolean().isRequired(),
 });
 
 const listAddMemberDtoInType = shape({
@@ -62,7 +59,6 @@ const listAddMemberDtoInType = shape({
 
 const listAddItemDtoInType = shape({
   listId: id().isRequired(),
-  itemId: id().isRequired(),
   itemName: string(1, 200).isRequired(),
   solved: boolean().isRequired(),
 });

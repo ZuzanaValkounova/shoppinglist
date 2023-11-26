@@ -8,5 +8,173 @@
   "languages": [
     "cs",
     "en"
-  ]
+  ],
+    "data": {
+      "awid": "4ef6a7b01b5942ecbfb925b249af987f",
+      "id": "5c9103df323cc0000c303009",
+      "sys": {
+        "cts": "2019-03-19T14:59:43.847Z",
+        "mts": "2020-04-16T13:55:18.896Z",
+        "rev": 4
+      },
+      "state": "active",
+      "name": "Demo uuJokes",
+      "list": [
+        {
+          "name": "Not a Member nor creator",
+          "members": [{
+                    "uuId": "345-678",
+                    "name": "Jane Smith"
+                }],
+          "items": [
+            {
+              "id": "6561c52af871b4be44bccfe7",
+              "name": "chips",
+              "solved": false
+            },
+            {
+              "id": "6561d68245b1d37096e14f5b",
+              "name": "banana",
+              "solved": false
+            },
+            {
+              "id": "6561d6d845b1d37096e14f5c",
+              "name": "melon",
+              "solved": true
+            },
+            {
+              "id": "6561d6de45b1d37096e14f5d",
+              "name": "orange",
+              "solved": true
+            }
+          ],
+          "archived": false,
+          "creatorUuId": "1234-897",
+          "creatorName": "Karol Druhá",
+          "awid": "22222222222222222222222222222222",
+          "sys": {
+            "cts": "2023-11-25T09:38:48.567Z",
+            "mts": "2023-11-25T11:21:20.464Z",
+            "rev": 0
+          },
+          "id": "6559edb822d35e0d085dad40"
+        },
+            {
+          "name": "Not creator but is member",
+          "members": [{
+                    "uuId": "9633-8599-9311-0000",
+                    "name": "Zuzana Valkounová"
+                }],
+          "items": [
+            {
+              "id": "6561c52af871b4be44bccfe7",
+              "name": "chips",
+              "solved": false
+            },
+            {
+              "id": "6561d68245b1d37096e14f5b",
+              "name": "banana",
+              "solved": false
+            },
+            {
+              "id": "6561d6d845b1d37096e14f5c",
+              "name": "melon",
+              "solved": true
+            },
+            {
+              "id": "6561d6de45b1d37096e14f5d",
+              "name": "orange",
+              "solved": true
+            }
+          ],
+          "archived": false,
+          "creatorUuId": "123-456",
+          "creatorName": "John Smith",
+          "awid": "22222222222222222222222222222222",
+          "sys": {
+            "cts": "2023-11-25T09:38:48.567Z",
+            "mts": "2023-11-25T11:21:20.464Z",
+            "rev": 67
+          },
+          "id": "6559edfbf044ec379896d1ea"
+        },
+            {
+          "name": "Billa",
+          "members": [],
+          "items": [
+            {
+              "id": "6561c52af871b4be44bccfe7",
+              "name": "chips",
+              "solved": false
+            },
+            {
+              "id": "6561d68245b1d37096e14f5b",
+              "name": "banana",
+              "solved": false
+            },
+            {
+              "id": "6561d6d845b1d37096e14f5c",
+              "name": "melon",
+              "solved": true
+            },
+            {
+              "id": "6561d6de45b1d37096e14f5d",
+              "name": "orange",
+              "solved": true
+            }
+          ],
+          "archived": false,
+          "creatorUuId": "9633-8599-9311-0000",
+          "creatorName": "Zuzana Valkounová",
+          "awid": "22222222222222222222222222222222",
+          "sys": {
+            "cts": "2023-11-25T09:38:48.567Z",
+            "mts": "2023-11-25T11:21:20.464Z",
+            "rev": 67
+          },
+          "id": "6561c0a87d75483048eb2de0"
+        },
+            {
+          "name": "Kaufland",
+          "members": [{"uuId": "11-5119-1", "name": "Gabriela Vosáhlová"}, {"uuId": "7777-1", "name": "Sonya Lano"}],
+          "items": [
+            {
+              "id": "6561c52af871b4be44bccfe7",
+              "name": "chips",
+              "solved": false
+            },
+            {
+              "id": "6561d68245b1d37096e14f5b",
+              "name": "banana",
+              "solved": false
+            },
+            {
+              "id": "6561d6d845b1d37096e14f5c",
+              "name": "melon",
+              "solved": true
+            },
+            {
+              "id": "6561d6de45b1d37096e14f5d",
+              "name": "orange",
+              "solved": true
+            }
+          ],
+          "archived": true,
+          "creatorUuId": "9633-8599-9311-0000",
+          "creatorName": "Zuzana Valkounová",
+          "awid": "22222222222222222222222222222222",
+          "sys": {
+            "cts": "2023-11-25T09:38:48.567Z",
+            "mts": "2023-11-25T11:21:20.464Z",
+            "rev": 2
+          },
+          "id": "6561c0b37d75483048eb2dea"
+        }
+      ]
+    },
+    "sysData": {
+      "profileData": {
+        "uuIdentityProfileList": ["Creators"]
+      }
+    }
 }

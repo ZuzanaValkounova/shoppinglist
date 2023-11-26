@@ -1,25 +1,14 @@
 //@@viewOn:imports
-import { createVisualComponent, useRoute, useSession, useState, Utils } from "uu5g05";
+import { createVisualComponent, useRoute, useSession, useState } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
-import ItemList from "./item-list";
 import TextInput from "./text-input";
 import MemberManager from "./member-manager";
+import { useAlertBus } from "uu5g05-elements";
+import Item from "./item.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
-const INITIAL_DATA = {
-  id: "cd8f0b48",
-  name: "Kaufland",
-  memberList: [{ id: "m01", name: "Karel Omáčka" }],
-  itemList: [
-    { id: Utils.String.generateId(), name: "Cukr" },
-    { id: Utils.String.generateId(), name: "Mouka", checked: true },
-  ],
-  owner: { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
-};
-
-// TODO work 1h 45min
 //@@viewOff:constants
 
 //@@viewOn:css
@@ -44,65 +33,100 @@ const ShoppingListDetail = createVisualComponent({
   //@@viewOff:propTypes
 
   //@@viewOn:defaultProps
-  defaultProps: {
-    data: INITIAL_DATA,
-  },
   //@@viewOff:defaultProps
 
   render(props) {
     //@@viewOn:private
-    const { data } = props;
+    const listDataObject = props.detailDataObject;
+    const { addAlert } = useAlertBus();
 
     const [route, setRoute] = useRoute();
-    const [name, setName] = useState(data.name);
-    const [memberList, setMemberList] = useState(data.memberList);
-    const [itemList, setItemList] = useState(data.itemList);
-
+    const [name, setName] = useState(listDataObject.data.name);
     const [modalOpen, setModalOpen] = useState(false);
+    const [newItem, setNewItem] = useState("");
 
-    const { identity } = useSession();
-    const isOwner = identity?.uuIdentity === data.owner.id;
     const listId = route.params.id;
-
-    const uncheckedItemList = [];
-    const checkedItemList = [];
-    itemList.forEach((item) => {
-      item.checked ? checkedItemList.push(item) : uncheckedItemList.push(item);
-    });
-    uncheckedItemList.push({});
+    const { identity } = useSession();
+    const isOwner = identity?.uuIdentity === listDataObject.data.creatorUuId;
 
     const [checkedOpen, setCheckedOpen] = useState(false);
 
-    function handleCheckItem(id) {
-      if (id) {
-        setItemList(([...currItemList]) => {
-          const index = currItemList.findIndex((item) => item.id === id);
-          const item = currItemList[index];
-          currItemList.splice(index, 1, { ...item, checked: !item.checked });
-          return currItemList;
+    async function handleUpdateItem(itemName, itemId, itemSolved) {
+      try {
+        await props.detailDataObject.handlerMap.updateItem(listId, itemId, itemName, itemSolved);
+      } catch (error) {
+        addAlert({
+          message: `Item update failed.`,
+          priority: "error",
+          durationMs: 4000,
         });
       }
     }
 
-    function handleChangeName(id, name) {
-      setItemList(([...currItemList]) => {
-        if (id) {
-          const index = currItemList.findIndex((item) => item.id === id);
-          const item = currItemList[index];
-          currItemList.splice(index, 1, { ...item, name });
-        } else {
-          if (name) currItemList.push({ id: Utils.String.generateId(), name });
-        }
-        return currItemList;
-      });
+    async function handleAddItem() {
+      try {
+        await props.detailDataObject.handlerMap.addItem(listId, newItem);
+        setNewItem("");
+      } catch (error) {
+        addAlert({
+          message: `Adding item failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
+      }
     }
 
-    function handleDelete(id) {
-      setItemList(([...currItemList]) => {
-        const index = currItemList.findIndex((item) => item.id === id);
-        currItemList.splice(index, 1);
-        return currItemList;
-      });
+    async function handleDelete(itemId) {
+      try {
+        await props.detailDataObject.handlerMap.deleteItem(listId, itemId);
+      } catch (error) {
+        addAlert({
+          message: `List delete failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
+      }
+    }
+
+    async function handleListRename(value) {
+      listDataObject.data.name = value;
+      try {
+        await listDataObject.handlerMap.update(listDataObject.data);
+      } catch (error) {
+        addAlert({
+          message: `List update failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+      }
+    }
+
+    async function handleAddMember(e) {
+      try {
+        await props.detailDataObject.handlerMap.addMember(listId, e.data.value.memberUuId, e.data.value.memberName);
+      } catch (error) {
+        addAlert({
+          message: `Adding member failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
+      }
+    }
+
+    async function handleDeleteMember(memberUuId) {
+      try {
+        await props.detailDataObject.handlerMap.deleteMember(listId, memberUuId);
+      } catch (error) {
+        addAlert({
+          message: `Removing member failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
+      }
     }
     //@@viewOff:private
 
@@ -113,43 +137,79 @@ const ShoppingListDetail = createVisualComponent({
           <Uu5Elements.Text category="interface" segment="title" type="common">
             {isOwner
               ? ({ style }) => (
-                  <TextInput className={Config.Css.css(style)} id={"header"} value={name} onChange={setName} />
+                  <TextInput
+                    className={Config.Css.css(style)}
+                    id={"header"}
+                    value={name}
+                    onChange={setName}
+                    handleRename={handleListRename}
+                  />
                 )
               : name}
           </Uu5Elements.Text>
         }
         actionList={[
-          { icon: "uugdsstencil-user-account-key", children: data.owner.name, onClick: () => setModalOpen(true) },
+          {
+            icon: "uugdsstencil-user-account-key",
+            children: listDataObject.data.creatorName,
+            onClick: () => setModalOpen(true),
+          },
         ]}
         headerSeparator={true}
       >
-        <div>
-          Once I am connected to db I will find the list with Id: "{listId}" (list that was clicked) and will provide
-          its data.
+        <div style={{ display: "inline-block", width: 320 }}>
+          {listDataObject.data.items.map((item, i) =>
+            !item.solved ? (
+              <Item
+                key={item.id || i}
+                {...item}
+                onCheck={handleUpdateItem}
+                onNameChange={(newName) => onNameChange(item.id, newName)}
+                handleChangeName={handleUpdateItem}
+                onDelete={handleDelete}
+              />
+            ) : null
+          )}
         </div>
-        <ItemList
-          data={uncheckedItemList}
-          onCheck={handleCheckItem}
-          onNameChange={handleChangeName}
-          onDelete={handleDelete}
+
+        <br />
+        <br />
+        <Uu5Elements.Input
+          style={{ marginLeft: 16 }}
+          value={newItem}
+          onChange={(e) => setNewItem(e.data.value)}
+          onBlur={newItem ? () => handleAddItem() : undefined}
         />
-        {checkedItemList.length ? (
-          <Uu5Elements.LinkPanel
-            header="Show checked"
-            open={checkedOpen}
-            onChange={() => setCheckedOpen(!checkedOpen)}
-            className={Css.panel()}
-          >
-            <ItemList data={checkedItemList} onCheck={handleCheckItem} onNameChange={handleChangeName} />
-          </Uu5Elements.LinkPanel>
-        ) : null}
+
+        <Uu5Elements.LinkPanel
+          header="Show checked"
+          open={checkedOpen}
+          onChange={() => setCheckedOpen(!checkedOpen)}
+          className={Css.panel()}
+        >
+          <div style={{ display: "inline-block", width: 320 }}>
+            {listDataObject.data.items.map((item, i) =>
+              item.solved ? (
+                <Item
+                  key={item.id || i}
+                  {...item}
+                  onCheck={handleUpdateItem}
+                  onNameChange={(newName) => onNameChange(item.id, newName)}
+                  onDelete={handleDelete}
+                />
+              ) : null
+            )}
+          </div>
+        </Uu5Elements.LinkPanel>
 
         <MemberManager
           open={modalOpen}
           onClose={() => setModalOpen(false)}
-          data={memberList}
-          onChange={setMemberList}
+          data={listDataObject.data}
+          handleDeleteMember={handleDeleteMember}
           isOwner={isOwner}
+          handleAddMember={handleAddMember}
+          identity={identity.uuIdentity}
         />
       </Uu5Elements.Block>
     );

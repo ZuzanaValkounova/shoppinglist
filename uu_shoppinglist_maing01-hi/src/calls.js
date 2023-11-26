@@ -39,6 +39,63 @@ const Calls = {
     return await Calls.getWorkspace();
   },
 
+  Shoppinglist: {
+    create(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/create");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+
+    list(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/list");
+      return Calls.call("get", commandUri, dtoIn);
+    },
+
+    listViewable(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/listViewable");
+      return Calls.call("get", commandUri, dtoIn);
+    },
+
+    get(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/get");
+      return Calls.call("get", commandUri, dtoIn);
+    },
+
+    delete(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/delete");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+
+    deleteItem(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/deleteItem");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+
+    deleteMember(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/deleteMember");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+
+    update(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/update");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+
+    updateItem(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/updateItem");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+
+    addMember(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/addMember");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+
+    addItem(dtoIn) {
+      const commandUri = Calls.getCommandUri("list/addItem");
+      return Calls.call("post", commandUri, dtoIn);
+    },
+  },
+
   getCommandUri(useCase, baseUri = Environment.appBaseUri) {
     return (!baseUri.endsWith("/") ? baseUri + "/" : baseUri) + (useCase.startsWith("/") ? useCase.slice(1) : useCase);
   },

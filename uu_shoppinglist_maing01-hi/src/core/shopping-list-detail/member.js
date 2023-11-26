@@ -21,15 +21,26 @@ const Member = createVisualComponent({
   //@@viewOff:defaultProps
 
   render(props) {
-    const { id, name, onDelete } = props;
+    const { uuId, name, handleDeleteMember } = props;
 
     //@@viewOn:render
     return (
       <Uu5Elements.ListItem
         significance="subdued"
-        actionList={onDelete ? [{ icon: "uugds-close", onClick: onDelete }] : undefined}
+        actionList={
+          handleDeleteMember
+            ? [
+                {
+                  icon: "uugds-close",
+                  onClick: () => {
+                    handleDeleteMember(uuId);
+                  },
+                },
+              ]
+            : undefined
+        }
       >
-        {name} ({id})
+        {name} ({uuId})
       </Uu5Elements.ListItem>
     );
     //@@viewOff:render

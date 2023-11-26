@@ -26,21 +26,18 @@ const Item = createVisualComponent({
   //@@viewOff:defaultProps
 
   render(props) {
-    const { id, name, checked, onCheck, onNameChange, onDelete } = props;
+    const { id, name, solved, onCheck, onNameChange, onDelete, handleChangeName } = props;
 
     //@@viewOn:render
     return (
-      <Uu5Elements.ListItem
-        significance="subdued"
-        actionList={id && onDelete ? [{ icon: "uugds-close", onClick: onDelete }] : undefined}
-      >
+      <Uu5Elements.ListItem significance="subdued" actionList={[{ icon: "uugds-close", onClick: () => onDelete(id) }]}>
         <Uu5Forms.Checkbox.Input
-          icon={checked ? "uugds-check" : undefined}
-          onClick={onCheck}
+          icon={solved ? "uugds-check" : undefined}
+          onClick={() => onCheck(name, id, !solved)}
           className={Css.check()}
           disabled={!id}
         />
-        <TextInput id={id} value={name} onChange={onNameChange} readOnly={checked} />
+        <TextInput id={id} value={name} onChange={onNameChange} readOnly={solved} handleRename={handleChangeName} />
       </Uu5Elements.ListItem>
     );
     //@@viewOff:render

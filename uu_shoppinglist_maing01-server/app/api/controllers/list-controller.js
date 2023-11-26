@@ -3,37 +3,37 @@ const ListAbl = require("../../abl/list-abl.js");
 
 class ListController {
   create(ucEnv) {
-    return ListAbl.create(ucEnv.getDtoIn());
+    return ListAbl.create(ucEnv.getDtoIn(), ucEnv.getUri().getAwid(), ucEnv.getSession());
   }
   list(ucEnv) {
-    return ListAbl.list(ucEnv.getDtoIn());
+    return ListAbl.list(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   listViewable(ucEnv) {
-    return ListAbl.listViewable(ucEnv.getDtoIn());
+    return ListAbl.listViewable(ucEnv.getDtoIn(), ucEnv.getUri().getAwid(), ucEnv.getSession());
   }
   get(ucEnv) {
-    return ListAbl.get(ucEnv.getDtoIn());
+    return ListAbl.get(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   delete(ucEnv) {
-    return ListAbl.delete(ucEnv.getDtoIn());
+    return ListAbl.delete(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   deleteItem(ucEnv) {
-    return ListAbl.deleteItem(ucEnv.getDtoIn());
+    return ListAbl.deleteItem(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   deleteMember(ucEnv) {
-    return ListAbl.deleteMember(ucEnv.getDtoIn());
+    return ListAbl.deleteMember(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   update(ucEnv) {
-    return ListAbl.update(ucEnv.getDtoIn());
+    return ListAbl.update(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   updateItem(ucEnv) {
-    return ListAbl.updateItem(ucEnv.getDtoIn());
+    return ListAbl.updateItem(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   addMember(ucEnv) {
-    return ListAbl.addMember(ucEnv.getDtoIn());
+    return ListAbl.addMember(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
   addItem(ucEnv) {
-    return ListAbl.addItem(ucEnv.getDtoIn());
+    return ListAbl.addItem(ucEnv.getDtoIn(), ucEnv.getUri().getAwid());
   }
 }
 
