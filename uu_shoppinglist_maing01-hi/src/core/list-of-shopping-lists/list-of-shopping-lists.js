@@ -36,7 +36,6 @@ const ListOfShoppingLists = createVisualComponent({
 
   render(props) {
     //@@viewOn:private
-    // const { data } = props;
     const shoppinglistList = props.shoppinglistDataList.data.filter((item) => item !== undefined);
     const { addAlert } = useAlertBus();
 
@@ -96,7 +95,7 @@ const ListOfShoppingLists = createVisualComponent({
     }
 
     async function handleListArchive(listDataObject) {
-      listDataObject.data.archived = !listDataObject.data.archived
+      listDataObject.data.archived = !listDataObject.data.archived;
       try {
         await listDataObject.handlerMap.update(listDataObject.data);
       } catch (error) {
