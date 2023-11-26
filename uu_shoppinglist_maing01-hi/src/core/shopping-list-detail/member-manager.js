@@ -1,9 +1,9 @@
 //@@viewOn:imports
-import { createVisualComponent, useRef } from "uu5g05";
+import { createVisualComponent } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 import Member from "./member";
-import TextInput from "./text-input";
+import Uu5Forms from "uu5g05-forms";
 //@@viewOff:imports
 
 //@@viewOn:css
@@ -11,7 +11,7 @@ import TextInput from "./text-input";
 
 const MemberManager = createVisualComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "TextInput",
+  uu5Tag: Config.TAG + "MemberManager",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -23,34 +23,29 @@ const MemberManager = createVisualComponent({
   //@@viewOff:defaultProps
 
   render(props) {
-    const { data, onChange, isOwner, ...restProps } = props;
-
-    const tempDataRef = useRef({});
-
-    function addMember(key, value) {
-      tempDataRef.current[key] = value;
-      if (tempDataRef.current.id && tempDataRef.current.name) {
-        const newData = [...data];
-        newData.push(tempDataRef.current);
-        onChange(newData);
-        tempDataRef.current = {};
-      }
-    }
+    const { data, handleDeleteMember, isOwner, handleAddMember, identity, ...restProps } = props;
 
     //@@viewOn:render
     return (
       <Uu5Elements.Modal header="Members" width={600} {...restProps}>
-        {data.map((item) => (
+        {data.members.map((member) => (
           <Member
-            key={item.id}
-            {...item}
-            onDelete={isOwner ? () => onChange(data.filter(({ id }) => id !== item.id)) : undefined}
+            key={member.uuId}
+            {...member}
+            handleDeleteMember={isOwner || identity === member.uuId ? handleDeleteMember : undefined}
           />
         ))}
         {isOwner && (
-          <Uu5Elements.ListItem significance="subdued" key={data.length}>
-            <TextInput placeholder="id" onChange={(id) => addMember("id", id)} />
-            <TextInput placeholder="name" onChange={(name) => addMember("name", name)} />
+          <Uu5Elements.ListItem significance="subdued" key={data.members.length}>
+            <Uu5Forms.Form
+              onSubmit={(e) => {
+                handleAddMember(e);
+              }}
+            >
+              <Uu5Forms.FormText name="memberUuId" placeholder="id" required />
+              <Uu5Forms.FormText name="memberName" placeholder="name" style={{ margin: "5px 0px" }} required />
+              <Uu5Forms.SubmitButton>Add</Uu5Forms.SubmitButton>
+            </Uu5Forms.Form>
           </Uu5Elements.ListItem>
         )}
       </Uu5Elements.Modal>

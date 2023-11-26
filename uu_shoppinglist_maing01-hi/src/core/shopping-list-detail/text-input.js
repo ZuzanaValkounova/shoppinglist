@@ -21,7 +21,7 @@ const TextInput = createVisualComponent({
   //@@viewOff:defaultProps
 
   render(props) {
-    const { id, value, onChange, handleListRename, ...restProps } = props;
+    const { id, value, onChange, handleRename, ...restProps } = props;
     const [v, setV] = useState(value);
 
     //@@viewOn:render
@@ -29,7 +29,7 @@ const TextInput = createVisualComponent({
       <Uu5Forms.Text.Input
         value={v}
         onChange={(e) => setV(e.data.value)}
-        onBlur={() => handleListRename(v)}
+        onBlur={handleRename ? () => handleRename(v, id, restProps.readOnly) : undefined}
         significance={id ? "subdued" : undefined}
         {...restProps}
         minLength={1}

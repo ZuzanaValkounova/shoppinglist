@@ -26,6 +26,12 @@ class ListAbl {
       Errors.Create.InvalidDtoIn
     );
 
+    if (dtoIn.items.length > 0) {
+      for (let i = 0; i < dtoIn.items.length; i++) {
+        dtoIn.items[i].id = new ObjectId();
+      }
+    }
+
     const uuIdentity = session.getIdentity().getUuIdentity();
     const uuIdentityName = session.getIdentity().getName();
 
@@ -147,6 +153,8 @@ class ListAbl {
       Errors.DeleteItem.InvalidDtoIn
     );
 
+    dtoIn.itemId = new ObjectId(dtoIn.itemId);
+
     //delete from list in db
     const result = await this.dao.deleteItem(awid, dtoIn.listId, dtoIn.itemId);
 
@@ -215,6 +223,8 @@ class ListAbl {
       Errors.UpdateItem.InvalidDtoIn
     );
 
+    dtoIn.itemId = new ObjectId(dtoIn.itemId);
+
     //update in list in db
     const dtoOut = await this.dao.updateItem(awid, dtoIn);
 
@@ -259,7 +269,7 @@ class ListAbl {
       Errors.AddItem.InvalidDtoIn
     );
 
-    const item = { id: new ObjectId(), name: dtoIn.itemName, solved: dtoIn.solved };
+    const item = { name: dtoIn.itemName, solved: dtoIn.solved, id: new ObjectId() };
 
     //add into list in db
     const dtoOut = await this.dao.addItem(awid, dtoIn.listId, item);

@@ -1,8 +1,7 @@
 //@@viewOn:imports
-import { createVisualComponent, useRoute, useSession, useState, Utils } from "uu5g05";
+import { createVisualComponent, useRoute, useSession, useState } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
-import ItemList from "./item-list";
 import TextInput from "./text-input";
 import MemberManager from "./member-manager";
 import { useAlertBus } from "uu5g05-elements";
@@ -10,18 +9,6 @@ import Item from "./item.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
-const INITIAL_DATA = {
-  id: "cd8f0b48",
-  name: "Kaufland",
-  memberList: [{ id: "m01", name: "Karel Omáčka" }],
-  itemList: [
-    { id: Utils.String.generateId(), name: "Cukr" },
-    { id: Utils.String.generateId(), name: "Mouka", checked: true },
-  ],
-  owner: { id: "9633-8599-9311-0000", name: "Zuzana Valkounová" },
-};
-
-// TODO work 1h 45min
 //@@viewOff:constants
 
 //@@viewOn:css
@@ -55,68 +42,52 @@ const ShoppingListDetail = createVisualComponent({
 
     const [route, setRoute] = useRoute();
     const [name, setName] = useState(listDataObject.data.name);
-    const [memberList, setMemberList] = useState(listDataObject.data.members);
-    // const [itemList, setItemList] = useState(listDataObject.data.items);
-
     const [modalOpen, setModalOpen] = useState(false);
+    const [newItem, setNewItem] = useState("");
 
     const listId = route.params.id;
     const { identity } = useSession();
     const isOwner = identity?.uuIdentity === listDataObject.data.creatorUuId;
 
-    // const uncheckedItemList = [];
-    // const checkedItemList = [];
-    // itemList.forEach((item) => {
-    //   item.solved ? checkedItemList.push(item) : uncheckedItemList.push(item);
-    // });
-    // uncheckedItemList.push({});
-
     const [checkedOpen, setCheckedOpen] = useState(false);
 
-    async function handleCheckItem(item) {
-      // if (id) {
-      //   setItemList(([...currItemList]) => {
-      //     const index = currItemList.findIndex((item) => item.id === id);
-      //     const item = currItemList[index];
-      //     currItemList.splice(index, 1, { ...item, solved: !item.solved });
-      //     return currItemList;
-      //   });
-      // }
+    async function handleUpdateItem(itemName, itemId, itemSolved) {
       try {
-        await props.detailDataObject.handlerMap.updateItem(listDataObject.data);
-      } catch (error) {}
-    }
-
-    function handleChangeName(id, name) {
-      // setItemList(([...currItemList]) => {
-      //   if (id) {
-      //     const index = currItemList.findIndex((item) => item.id === id);
-      //     const item = currItemList[index];
-      //     currItemList.splice(index, 1, { ...item, name });
-      //   } else {
-      //     if (name) currItemList.push({ id: Utils.String.generateId(), name });
-      //   }
-      //   return currItemList;
-      // });
-    }
-
-    async function handleDelete(itemId) {
-      // setItemList(([...currItemList]) => {
-      //   const index = currItemList.findIndex((item) => item.id === itemId);
-      //   currItemList.splice(index, 1);
-      //   return currItemList;
-      // });
-      try {
-        await props.detailDataObject.handlerMap.deleteItem(listId, itemId);
+        await props.detailDataObject.handlerMap.updateItem(listId, itemId, itemName, itemSolved);
       } catch (error) {
         addAlert({
-          message: `List delete failed!`,
+          message: `Item update failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+      }
+    }
+
+    async function handleAddItem() {
+      try {
+        await props.detailDataObject.handlerMap.addItem(listId, newItem);
+        setNewItem("");
+      } catch (error) {
+        addAlert({
+          message: `Adding item failed.`,
           priority: "error",
           durationMs: 4000,
         });
         return;
       }
-      // props.detailDataObject.handlerMap.load(listId);
+    }
+
+    async function handleDelete(itemId) {
+      try {
+        await props.detailDataObject.handlerMap.deleteItem(listId, itemId);
+      } catch (error) {
+        addAlert({
+          message: `List delete failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
+      }
     }
 
     async function handleListRename(value) {
@@ -129,6 +100,32 @@ const ShoppingListDetail = createVisualComponent({
           priority: "error",
           durationMs: 4000,
         });
+      }
+    }
+
+    async function handleAddMember(e) {
+      try {
+        await props.detailDataObject.handlerMap.addMember(listId, e.data.value.memberUuId, e.data.value.memberName);
+      } catch (error) {
+        addAlert({
+          message: `Adding member failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
+      }
+    }
+
+    async function handleDeleteMember(memberUuId) {
+      try {
+        await props.detailDataObject.handlerMap.deleteMember(listId, memberUuId);
+      } catch (error) {
+        addAlert({
+          message: `Removing member failed.`,
+          priority: "error",
+          durationMs: 4000,
+        });
+        return;
       }
     }
     //@@viewOff:private
@@ -145,7 +142,7 @@ const ShoppingListDetail = createVisualComponent({
                     id={"header"}
                     value={name}
                     onChange={setName}
-                    handleListRename={handleListRename}
+                    handleRename={handleListRename}
                   />
                 )
               : name}
@@ -160,27 +157,29 @@ const ShoppingListDetail = createVisualComponent({
         ]}
         headerSeparator={true}
       >
-        <div>{JSON.stringify(listDataObject)}</div>
-        {/* <ItemList
-          data={listDataObject.data.items}
-          onCheck={handleCheckItem}
-          onNameChange={handleChangeName}
-          onDelete={handleDelete}
-          listCheched={false}
-        /> */}
         <div style={{ display: "inline-block", width: 320 }}>
           {listDataObject.data.items.map((item, i) =>
             !item.solved ? (
               <Item
                 key={item.id || i}
                 {...item}
-                onCheck={() => handleCheckItem(item.id)}
+                onCheck={handleUpdateItem}
                 onNameChange={(newName) => onNameChange(item.id, newName)}
-                onDelete={() => handleDelete(item.id)}
+                handleChangeName={handleUpdateItem}
+                onDelete={handleDelete}
               />
             ) : null
           )}
         </div>
+
+        <br />
+        <br />
+        <Uu5Elements.Input
+          style={{ marginLeft: 16 }}
+          value={newItem}
+          onChange={(e) => setNewItem(e.data.value)}
+          onBlur={newItem ? () => handleAddItem() : undefined}
+        />
 
         <Uu5Elements.LinkPanel
           header="Show checked"
@@ -194,28 +193,23 @@ const ShoppingListDetail = createVisualComponent({
                 <Item
                   key={item.id || i}
                   {...item}
-                  onCheck={() => handleCheckItem(item.id)}
+                  onCheck={handleUpdateItem}
                   onNameChange={(newName) => onNameChange(item.id, newName)}
-                  onDelete={() => handleDelete(item.id)}
+                  onDelete={handleDelete}
                 />
               ) : null
             )}
           </div>
-          {/* <ItemList
-            data={listDataObject.data.items}
-            onCheck={handleCheckItem}
-            onNameChange={handleChangeName}
-            onDelete={handleDelete}
-            listCheched={true}
-          /> */}
         </Uu5Elements.LinkPanel>
 
         <MemberManager
           open={modalOpen}
           onClose={() => setModalOpen(false)}
-          data={memberList}
-          onChange={setMemberList}
+          data={listDataObject.data}
+          handleDeleteMember={handleDeleteMember}
           isOwner={isOwner}
+          handleAddMember={handleAddMember}
+          identity={identity.uuIdentity}
         />
       </Uu5Elements.Block>
     );
