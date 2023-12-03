@@ -46,7 +46,7 @@ let Home = createVisualComponent({
         <ListProvider>
           {(shoppinglistDataList) => (
             <RouteController routeDataObject={shoppinglistDataList}>
-              <div className={Config.Css.css({ padding: "16px 32px" })}>
+              <div className={Config.Css.css({ padding: "0px 32px 16px 32px " })}>
                 <ListOfShoppingLists shoppinglistDataList={shoppinglistDataList} />
               </div>
             </RouteController>

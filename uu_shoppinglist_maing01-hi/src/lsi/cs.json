@@ -32,5 +32,32 @@
   "Menu": {
     "home": "Vítejte",
     "about": "O aplikaci"
+  },
+  "List": {
+    "create": "Vytvořit nový list",
+    "archived": "Archivované",
+    "name": "Název nákupního listu",
+    "createBtn": "Vytvořit",
+    "deleteTextHeader": "Potvrdit smazání?",
+    "deleteText": "Tento krok nelze vrátit.",
+    "deleteBtn": "Smazat",
+    "cancelBtn": "Zrušit"
+  },
+  "Alert": {
+    "createFail": "Vytvoření listu selhalo!",
+    "createSuccess": "List {0} byl vytvořen.",
+    "deleteFail": "Smazání listu selhalo!",
+    "deleteSuccess": "List byl smazán.",
+    "updateFail": "Upravení listu selhalo!",
+    "itemUpFail": "Upravení položky selhalo!",
+    "itemAddFail": "Přidání položky selhalo!",
+    "itemDelFail": "Smazání položky selhalo!",
+    "memberAddFail": "Přidání člena selhalo!",
+    "memberRemFail": "Odebrání člena selhalo!"
+  },
+  "Detail": {
+    "checked": "Ukázat odfajvkované",
+    "members": "Členi",
+    "add": "Přidat"
   }
 }
