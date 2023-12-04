@@ -98,7 +98,7 @@ class ListAbl {
     return dtoOut;
   }
 
-  async get(dtoIn, awid) {
+  async get(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -111,15 +111,24 @@ class ListAbl {
       Errors.Get.InvalidDtoIn
     );
 
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
     //fetch from db
-    const dtoOut = await this.dao.get(awid, dtoIn.id);
+    const result = await this.dao.get(awid, dtoIn.id);
+
+    if (result.creatorUuId !== uuIdentity && !result.members.find((member) => member.uuId === uuIdentity)) {
+      const error = new Error("User not authorized to view this list.");
+      error.status = "403";
+      error.code = "list/get/notAuthorized";
+      throw error;
+    }
 
     // prepare and return dtoOut
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    const dtoOut = { ...result, uuAppErrorMap };
     return dtoOut;
   }
 
-  async delete(dtoIn, awid) {
+  async delete(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -132,6 +141,17 @@ class ListAbl {
       Errors.Delete.InvalidDtoIn
     );
 
+    const list = await this.dao.get(awid, dtoIn.id);
+
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
+    if (list.creatorUuId !== uuIdentity) {
+      const error = new Error("User not authorized to delete this list.");
+      error.status = "403";
+      error.code = "list/delete/notAuthorized";
+      throw error;
+    }
+
     //delete from db
     const result = await this.dao.delete(awid, dtoIn.id);
 
@@ -140,7 +160,7 @@ class ListAbl {
     return dtoOut;
   }
 
-  async deleteItem(dtoIn, awid) {
+  async deleteItem(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -153,6 +173,17 @@ class ListAbl {
       Errors.DeleteItem.InvalidDtoIn
     );
 
+    const list = await this.dao.get(awid, dtoIn.listId);
+
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
+    if (list.creatorUuId !== uuIdentity && !list.members.find((member) => member.uuId === uuIdentity)) {
+      const error = new Error("User not authorized to edit this list.");
+      error.status = "403";
+      error.code = "list/deleteItem/notAuthorized";
+      throw error;
+    }
+
     dtoIn.itemId = new ObjectId(dtoIn.itemId);
 
     //delete from list in db
@@ -163,7 +194,7 @@ class ListAbl {
     return dtoOut;
   }
 
-  async deleteMember(dtoIn, awid) {
+  async deleteMember(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -176,6 +207,20 @@ class ListAbl {
       Errors.DeleteMember.InvalidDtoIn
     );
 
+    const list = await this.dao.get(awid, dtoIn.listId);
+
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
+    if (
+      list.creatorUuId !== uuIdentity &&
+      (!list.members.find((member) => member.uuId === uuIdentity) || dtoIn.memberUuId !== uuIdentity)
+    ) {
+      const error = new Error("User not authorized to remove this member.");
+      error.status = "403";
+      error.code = "list/deleteMember/notAuthorized";
+      throw error;
+    }
+
     //delete from list in db
     const result = await this.dao.deleteMember(awid, dtoIn.listId, dtoIn.memberUuId);
 
@@ -184,7 +229,7 @@ class ListAbl {
     return dtoOut;
   }
 
-  async update(dtoIn, awid) {
+  async update(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -196,6 +241,17 @@ class ListAbl {
       Warnings.Update.UnsupportedKeys.code,
       Errors.Update.InvalidDtoIn
     );
+
+    const listBeforeUpdate = await this.dao.get(awid, dtoIn.id);
+
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
+    if (listBeforeUpdate.creatorUuId !== uuIdentity) {
+      const error = new Error("User not authorized to update this list's name and archived status.");
+      error.status = "403";
+      error.code = "list/update/notAuthorized";
+      throw error;
+    }
 
     let list = {};
 
@@ -210,7 +266,7 @@ class ListAbl {
     return dtoOut;
   }
 
-  async updateItem(dtoIn, awid) {
+  async updateItem(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -223,6 +279,17 @@ class ListAbl {
       Errors.UpdateItem.InvalidDtoIn
     );
 
+    const list = await this.dao.get(awid, dtoIn.listId);
+
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
+    if (list.creatorUuId !== uuIdentity && !list.members.find((member) => member.uuId === uuIdentity)) {
+      const error = new Error("User not authorized to edit this list.");
+      error.status = "403";
+      error.code = "list/updateItem/notAuthorized";
+      throw error;
+    }
+
     dtoIn.itemId = new ObjectId(dtoIn.itemId);
 
     //update in list in db
@@ -233,7 +300,7 @@ class ListAbl {
     return dtoOut;
   }
 
-  async addMember(dtoIn, awid) {
+  async addMember(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -246,6 +313,17 @@ class ListAbl {
       Errors.AddMember.InvalidDtoIn
     );
 
+    const list = await this.dao.get(awid, dtoIn.listId);
+
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
+    if (list.creatorUuId !== uuIdentity) {
+      const error = new Error("User not authorized to add members to this list.");
+      error.status = "403";
+      error.code = "list/addMember/notAuthorized";
+      throw error;
+    }
+
     const member = { uuId: dtoIn.memberUuId, name: dtoIn.memberName };
 
     //add into list in db
@@ -256,7 +334,7 @@ class ListAbl {
     return dtoOut;
   }
 
-  async addItem(dtoIn, awid) {
+  async addItem(dtoIn, awid, session) {
     let uuAppErrorMap = {};
 
     // validates dtoIn
@@ -268,6 +346,17 @@ class ListAbl {
       Warnings.AddItem.UnsupportedKeys.code,
       Errors.AddItem.InvalidDtoIn
     );
+
+    const list = await this.dao.get(awid, dtoIn.listId);
+
+    const uuIdentity = session.getIdentity().getUuIdentity();
+
+    if (list.creatorUuId !== uuIdentity && !list.members.find((member) => member.uuId === uuIdentity)) {
+      const error = new Error("User not authorized to edit this list.");
+      error.status = "403";
+      error.code = "list/addItem/notAuthorized";
+      throw error;
+    }
 
     const item = { name: dtoIn.itemName, solved: dtoIn.solved, id: new ObjectId() };
 

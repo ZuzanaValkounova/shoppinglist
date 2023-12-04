@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent } from "uu5g05";
+import { Utils, createVisualComponent, useScreenSize } from "uu5g05";
 import { RouteController, withRoute } from "uu_plus4u5g02-app";
 
 import Config from "./config/config.js";
@@ -13,6 +13,30 @@ import ListProvider from "../core/list-of-shopping-lists/list-provider.js";
 //@@viewOff:constants
 
 //@@viewOn:css
+const Css = {
+  container: (screenSize) => {
+    let maxWidth;
+
+    switch (screenSize) {
+      case "xs":
+      case "s":
+        maxWidth = "100%";
+        break;
+      case "m":
+        maxWidth = 640;
+        break;
+      case "l":
+        maxWidth = 960;
+        break;
+      case "xl":
+      default:
+        maxWidth = 1280;
+    }
+
+    return Config.Css.css({ maxWidth: maxWidth, margin: "0px auto", paddingLeft: 16, paddingRight: 16 });
+  },
+  createView: () => Config.Css.css({ margin: "24px 0px" }),
+};
 //@@viewOff:css
 
 //@@viewOn:helpers
@@ -33,6 +57,7 @@ let Home = createVisualComponent({
 
   render(props) {
     //@@viewOn:private
+    const [screenSize] = useScreenSize();
     //@@viewOff:private
 
     //@@viewOn:interface
@@ -42,11 +67,11 @@ let Home = createVisualComponent({
     const attrs = Utils.VisualComponent.getAttrs(props);
     return (
       <div {...attrs}>
-        <RouteBar />
+        <RouteBar className={Css.container(screenSize)} />
         <ListProvider>
           {(shoppinglistDataList) => (
             <RouteController routeDataObject={shoppinglistDataList}>
-              <div className={Config.Css.css({ padding: "0px 32px 16px 32px " })}>
+              <div className={Css.container(screenSize)}>
                 <ListOfShoppingLists shoppinglistDataList={shoppinglistDataList} />
               </div>
             </RouteController>

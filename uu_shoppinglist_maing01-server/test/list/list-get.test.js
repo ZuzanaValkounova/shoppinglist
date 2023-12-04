@@ -44,4 +44,18 @@ describe("uuCmd list/get", () => {
       expect(e.status).toEqual(400);
     }
   });
+
+  test("not creator nor member", async () => {
+    await TestHelper.login("Creators");
+    const list = await TestHelper.executePostCommand("list/create", LIST);
+
+    expect.assertions(2);
+    try {
+      await TestHelper.login("CreatorsDiffId");
+      await TestHelper.executeGetCommand("list/get", { id: list.id });
+    } catch (e) {
+      expect(e.code).toEqual("list/get/notAuthorized");
+      expect(e.status).toEqual(403);
+    }
+  });
 });
