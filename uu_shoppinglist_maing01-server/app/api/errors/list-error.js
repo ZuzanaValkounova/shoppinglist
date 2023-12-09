@@ -47,6 +47,14 @@ const Get = {
       this.message = "DtoIn is not valid.";
     }
   },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${Get.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to view this list.";
+    }
+  },
 };
 
 const Delete = {
@@ -57,6 +65,14 @@ const Delete = {
       super(...arguments);
       this.code = `${Delete.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
+    }
+  },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${Delete.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to delete this list.";
     }
   },
 };
@@ -71,6 +87,14 @@ const DeleteItem = {
       this.message = "DtoIn is not valid.";
     }
   },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${DeleteItem.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to delete items from this list.";
+    }
+  },
 };
 
 const DeleteMember = {
@@ -81,6 +105,14 @@ const DeleteMember = {
       super(...arguments);
       this.code = `${DeleteMember.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
+    }
+  },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${DeleteMember.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to remove this member.";
     }
   },
 };
@@ -95,6 +127,14 @@ const Update = {
       this.message = "DtoIn is not valid.";
     }
   },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${Update.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to update this list.";
+    }
+  },
 };
 
 const UpdateItem = {
@@ -105,6 +145,14 @@ const UpdateItem = {
       super(...arguments);
       this.code = `${UpdateItem.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
+    }
+  },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${UpdateItem.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to edit items in this list.";
     }
   },
 };
@@ -119,6 +167,14 @@ const AddMember = {
       this.message = "DtoIn is not valid.";
     }
   },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${AddMember.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to add members to this list.";
+    }
+  },
 };
 
 const AddItem = {
@@ -129,6 +185,14 @@ const AddItem = {
       super(...arguments);
       this.code = `${AddItem.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
+    }
+  },
+  UserNotAuthorized: class extends ShoppinglistMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 403;
+      this.code = `${AddItem.UC_CODE}notAuthorized`;
+      this.message = "User not authorized to add items to this list.";
     }
   },
 };

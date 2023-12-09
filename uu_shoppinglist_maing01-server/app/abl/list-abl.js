@@ -117,10 +117,7 @@ class ListAbl {
     const result = await this.dao.get(awid, dtoIn.id);
 
     if (result.creatorUuId !== uuIdentity && !result.members.find((member) => member.uuId === uuIdentity)) {
-      const error = new Error("User not authorized to view this list.");
-      error.status = "403";
-      error.code = "list/get/notAuthorized";
-      throw error;
+      throw new Errors.Get.UserNotAuthorized({ uuAppErrorMap });
     }
 
     // prepare and return dtoOut
@@ -146,10 +143,7 @@ class ListAbl {
     const uuIdentity = session.getIdentity().getUuIdentity();
 
     if (list.creatorUuId !== uuIdentity) {
-      const error = new Error("User not authorized to delete this list.");
-      error.status = "403";
-      error.code = "list/delete/notAuthorized";
-      throw error;
+      throw new Errors.Delete.UserNotAuthorized({ uuAppErrorMap });
     }
 
     //delete from db
@@ -178,10 +172,7 @@ class ListAbl {
     const uuIdentity = session.getIdentity().getUuIdentity();
 
     if (list.creatorUuId !== uuIdentity && !list.members.find((member) => member.uuId === uuIdentity)) {
-      const error = new Error("User not authorized to edit this list.");
-      error.status = "403";
-      error.code = "list/deleteItem/notAuthorized";
-      throw error;
+      throw new Errors.DeleteItem.UserNotAuthorized({ uuAppErrorMap });
     }
 
     dtoIn.itemId = new ObjectId(dtoIn.itemId);
@@ -215,10 +206,7 @@ class ListAbl {
       list.creatorUuId !== uuIdentity &&
       (!list.members.find((member) => member.uuId === uuIdentity) || dtoIn.memberUuId !== uuIdentity)
     ) {
-      const error = new Error("User not authorized to remove this member.");
-      error.status = "403";
-      error.code = "list/deleteMember/notAuthorized";
-      throw error;
+      throw new Errors.DeleteMember.UserNotAuthorized({ uuAppErrorMap });
     }
 
     //delete from list in db
@@ -247,10 +235,7 @@ class ListAbl {
     const uuIdentity = session.getIdentity().getUuIdentity();
 
     if (listBeforeUpdate.creatorUuId !== uuIdentity) {
-      const error = new Error("User not authorized to update this list's name and archived status.");
-      error.status = "403";
-      error.code = "list/update/notAuthorized";
-      throw error;
+      throw new Errors.Update.UserNotAuthorized({ uuAppErrorMap });
     }
 
     let list = {};
@@ -284,10 +269,7 @@ class ListAbl {
     const uuIdentity = session.getIdentity().getUuIdentity();
 
     if (list.creatorUuId !== uuIdentity && !list.members.find((member) => member.uuId === uuIdentity)) {
-      const error = new Error("User not authorized to edit this list.");
-      error.status = "403";
-      error.code = "list/updateItem/notAuthorized";
-      throw error;
+      throw new Errors.UpdateItem.UserNotAuthorized({ uuAppErrorMap });
     }
 
     dtoIn.itemId = new ObjectId(dtoIn.itemId);
@@ -318,10 +300,7 @@ class ListAbl {
     const uuIdentity = session.getIdentity().getUuIdentity();
 
     if (list.creatorUuId !== uuIdentity) {
-      const error = new Error("User not authorized to add members to this list.");
-      error.status = "403";
-      error.code = "list/addMember/notAuthorized";
-      throw error;
+      throw new Errors.AddMember.UserNotAuthorized({ uuAppErrorMap });
     }
 
     const member = { uuId: dtoIn.memberUuId, name: dtoIn.memberName };
@@ -352,10 +331,7 @@ class ListAbl {
     const uuIdentity = session.getIdentity().getUuIdentity();
 
     if (list.creatorUuId !== uuIdentity && !list.members.find((member) => member.uuId === uuIdentity)) {
-      const error = new Error("User not authorized to edit this list.");
-      error.status = "403";
-      error.code = "list/addItem/notAuthorized";
-      throw error;
+      throw new Errors.AddItem.UserNotAuthorized({ uuAppErrorMap });
     }
 
     const item = { name: dtoIn.itemName, solved: dtoIn.solved, id: new ObjectId() };

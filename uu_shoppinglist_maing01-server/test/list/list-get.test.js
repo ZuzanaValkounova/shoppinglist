@@ -45,17 +45,32 @@ describe("uuCmd list/get", () => {
     }
   });
 
-  test("not creator nor member", async () => {
+  test("not authorized", async () => {
     await TestHelper.login("Creators");
     const list = await TestHelper.executePostCommand("list/create", LIST);
 
+    await TestHelper.login("CreatorsDiffId");
+
     expect.assertions(2);
     try {
-      await TestHelper.login("CreatorsDiffId");
       await TestHelper.executeGetCommand("list/get", { id: list.id });
     } catch (e) {
-      expect(e.code).toEqual("list/get/notAuthorized");
+      expect(e.code).toEqual("uu-shoppinglist-main/list/get/notAuthorized");
       expect(e.status).toEqual(403);
     }
+  });
+
+  test("warning - unsupported keys", async () => {
+    await TestHelper.login("Creators");
+    const list = await TestHelper.executePostCommand("list/create", LIST);
+
+    const result = await TestHelper.executeGetCommand("list/get", { id: list.id, another: "another" });
+
+    expect(result.data.name).toEqual(LIST.name);
+    expect(result.data.members).toEqual(LIST.members);
+    expect(result.data.items).toEqual(LIST.items);
+    expect(result.data.archived).toEqual(LIST.archived);
+    expect(result.data.uuAppErrorMap).not.toBe({});
+    expect(Object.keys(result.data.uuAppErrorMap).length).toEqual(1);
   });
 });

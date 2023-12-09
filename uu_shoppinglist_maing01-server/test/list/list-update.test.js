@@ -2,7 +2,6 @@ const { TestHelper } = require("uu_appg01_server-test");
 
 beforeEach(async () => {
   await TestHelper.setup();
-  await TestHelper.setup();
   await TestHelper.initUuSubAppInstance();
   await TestHelper.createUuAppWorkspace();
   await TestHelper.initUuAppWorkspace({ uuAppProfileAuthorities: "urn:uu:GGPLUS4U" });
@@ -46,5 +45,37 @@ describe("uuCmd list/update", () => {
       expect(Object.keys(e.paramMap.missingKeyMap).length).toEqual(1);
       expect(e.status).toEqual(400);
     }
+  });
+
+  test("not authorized", async () => {
+    await TestHelper.login("Creators");
+    const list = await TestHelper.executePostCommand("list/create", LIST);
+
+    await TestHelper.login("CreatorsDiffId");
+
+    expect.assertions(2);
+    try {
+      await TestHelper.executePostCommand("list/update", { id: list.id, name: "Updated", archived: true });
+    } catch (e) {
+      expect(e.code).toEqual("uu-shoppinglist-main/list/update/notAuthorized");
+      expect(e.status).toEqual(403);
+    }
+  });
+
+  test("warning - unsupported keys", async () => {
+    await TestHelper.login("Creators");
+
+    const list = await TestHelper.executePostCommand("list/create", LIST);
+
+    const result = await TestHelper.executePostCommand("list/update", {
+      id: list.id,
+      name: "Updated",
+      another: "another",
+    });
+
+    expect(result.data.name).toEqual("Updated");
+    expect(result.data.archived).toEqual(LIST.archived);
+    expect(result.data.uuAppErrorMap).not.toBe({});
+    expect(Object.keys(result.data.uuAppErrorMap).length).toEqual(1);
   });
 });
