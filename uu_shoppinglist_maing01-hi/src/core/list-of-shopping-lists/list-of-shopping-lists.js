@@ -59,9 +59,9 @@ const ListOfShoppingLists = createVisualComponent({
         result = await props.shoppinglistDataList.handlerMap.create(newList);
       } catch (error) {
         addAlert({
-          header: <Lsi import={importLsi} path={["Alert", "createFail"]} />,
-          message: error.message,
+          message: <Lsi import={importLsi} path={["Alert", "createFail"]} />,
           priority: "error",
+          durationMs: 4000,
         });
         return;
       }
