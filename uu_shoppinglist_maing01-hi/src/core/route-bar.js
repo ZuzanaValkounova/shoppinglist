@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { createVisualComponent, Lsi, useRoute } from "uu5g05";
+import { createVisualComponent, useRoute, useAppBackground } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Plus4U5App from "uu_plus4u5g02-app";
 
@@ -32,8 +32,26 @@ const RouteBar = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const [, setRoute] = useRoute();
+    const [background, setBackground] = useAppBackground();
+    const darkMode = background === "dark";
 
-    const appActionList = [
+    const actionList = [
+      {
+        children: (
+          <Uu5Elements.Toggle
+            value={!darkMode}
+            onChange={() =>
+              setBackground({
+                backgroundColor: darkMode
+                  ? null
+                  : Uu5Elements.UuGds.ColorPalette.getValue(["building", "dark", "main"]),
+              })
+            }
+            iconOff="uugdsstencil-weather-moon"
+            iconOn="uugdsstencil-weather-sun"
+          />
+        ),
+      },
       {
         children: <Uu5Elements.Icon icon="uugds-home" style={{ fontSize: "25px" }} />,
         onClick: () => setRoute("home"),
@@ -45,7 +63,7 @@ const RouteBar = createVisualComponent({
     //@@viewOff:interface
 
     //@@viewOn:render
-    return <Plus4U5App.RouteBar appActionList={appActionList} {...props} />;
+    return <Plus4U5App.PositionBar actionList={actionList} view="short" {...props} />;
     //@@viewOff:render
   },
 });

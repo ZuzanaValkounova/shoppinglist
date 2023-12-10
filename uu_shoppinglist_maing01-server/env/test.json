@@ -26,6 +26,18 @@
       "accessCode2": "6YNV1u5G290-J!%83708141q51_!763n",
       "uuIdentity": "3039-912-8064-0000",
       "profileList": ["Authorities"]
+    },
+    "Creators": {
+      "accessCode1": "Y5&Cv$yt3rJx26u2P2&r03u9St@2!d5V",
+      "accessCode2": "6YNV1u5G290-J!%83708141q51_!763n",
+      "uuIdentity": "3039-912-8064-0000",
+      "profileList": ["Creators"]
+    },
+    "CreatorsDiffId": {
+      "accessCode1": "1234",
+      "accessCode2": "prokrastinace",
+      "uuIdentity": "9633-8599-9311-0000",
+      "profileList": ["Creators"]
     }
   },
   "log_level": "FATAL",

@@ -1,5 +1,6 @@
 //@@viewOn:imports
-import { createVisualComponent } from "uu5g05";
+import { createVisualComponent, Lsi } from "uu5g05";
+import importLsi from "../../lsi/import-lsi.js";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 import Member from "./member";
@@ -27,7 +28,7 @@ const MemberManager = createVisualComponent({
 
     //@@viewOn:render
     return (
-      <Uu5Elements.Modal header="Members" width={600} {...restProps}>
+      <Uu5Elements.Modal header={<Lsi import={importLsi} path={["Detail", "members"]} />} width={600} {...restProps}>
         {data.members.map((member) => (
           <Member
             key={member.uuId}
@@ -42,9 +43,16 @@ const MemberManager = createVisualComponent({
                 handleAddMember(e);
               }}
             >
-              <Uu5Forms.FormText name="memberUuId" placeholder="id" required />
-              <Uu5Forms.FormText name="memberName" placeholder="name" style={{ margin: "5px 0px" }} required />
-              <Uu5Forms.SubmitButton>Add</Uu5Forms.SubmitButton>
+              <Uu5Forms.FormText name="memberUuId" label="Id" required />
+              <Uu5Forms.FormText
+                name="memberName"
+                label={<Lsi lsi={{ cs: "Jméno", en: "Name" }} />}
+                style={{ margin: "5px 0px" }}
+                required
+              />
+              <Uu5Forms.SubmitButton colorScheme="primary" significance="distinct">
+                {<Lsi import={importLsi} path={["Detail", "add"]} />}
+              </Uu5Forms.SubmitButton>
             </Uu5Forms.Form>
           </Uu5Elements.ListItem>
         )}

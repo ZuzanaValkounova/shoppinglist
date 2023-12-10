@@ -32,5 +32,32 @@
   "Menu": {
     "home": "Welcome",
     "about": "About Application"
+  },
+  "List": {
+    "create": "Create New List",
+    "archived": "Archived",
+    "name": "Shopping List Name",
+    "createBtn": "Create",
+    "deleteTextHeader": "Confirm deletion?",
+    "deleteText": "This step cannot be undone.",
+    "deleteBtn": "Delete",
+    "cancelBtn": "Cancel"
+  },
+  "Alert": {
+    "createFail": "List creation failed!",
+    "createSuccess": "List {0} has been created.",
+    "deleteFail": "List delete failed!",
+    "deleteSuccess": "List has been deleted.",
+    "updateFail": "List update failed!",
+    "itemUpFail": "Item update failed!",
+    "itemAddFail": "Adding item failed!",
+    "itemDelFail": "Item delete failed!",
+    "memberAddFail": "Adding member failed!",
+    "memberRemFail": "Removing member failed!"
+  },
+  "Detail": {
+    "checked": "Show Checked",
+    "members": "Members",
+    "add": "Add"
   }
 }

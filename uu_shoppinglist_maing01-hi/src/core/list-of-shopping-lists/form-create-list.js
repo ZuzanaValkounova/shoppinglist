@@ -1,5 +1,6 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent } from "uu5g05";
+import { createVisualComponent, Lsi } from "uu5g05";
+import importLsi from "../../lsi/import-lsi.js";
 import Uu5Elements from "uu5g05-elements";
 import Uu5Forms from "uu5g05-forms";
 import Config from "../config/config.js";
@@ -48,7 +49,9 @@ const FormCreateList = createVisualComponent({
               columnGap={Uu5Elements.UuGds.SpacingPalette.getValue(["fixed", "c"])}
               justifyContent={{ s: "end" }}
             >
-              <Uu5Forms.SubmitButton>Create</Uu5Forms.SubmitButton>
+              <Uu5Forms.SubmitButton colorScheme="primary" significance="distinct">
+                <Lsi import={importLsi} path={["List", "createBtn"]} />
+              </Uu5Forms.SubmitButton>
             </Uu5Elements.Grid>
           }
         >
@@ -60,7 +63,7 @@ const FormCreateList = createVisualComponent({
               marginBottom: 8,
             })}
           >
-            <Uu5Forms.FormText name="listName" label="Shopping List Name" required />
+            <Uu5Forms.FormText name="listName" label={<Lsi import={importLsi} path={["List", "name"]} />} required />
           </div>
         </Uu5Elements.Block>
       </Uu5Forms.Form>

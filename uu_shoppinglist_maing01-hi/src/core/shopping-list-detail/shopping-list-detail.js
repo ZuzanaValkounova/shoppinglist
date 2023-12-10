@@ -1,5 +1,6 @@
 //@@viewOn:imports
-import { createVisualComponent, useRoute, useSession, useState } from "uu5g05";
+import { Lsi, createVisualComponent, useRoute, useSession, useState } from "uu5g05";
+import importLsi from "../../lsi/import-lsi.js";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 import TextInput from "./text-input";
@@ -56,7 +57,7 @@ const ShoppingListDetail = createVisualComponent({
         await props.detailDataObject.handlerMap.updateItem(listId, itemId, itemName, itemSolved);
       } catch (error) {
         addAlert({
-          message: `Item update failed.`,
+          message: <Lsi import={importLsi} path={["Alert", "itemUpFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
@@ -69,7 +70,7 @@ const ShoppingListDetail = createVisualComponent({
         setNewItem("");
       } catch (error) {
         addAlert({
-          message: `Adding item failed.`,
+          message: <Lsi import={importLsi} path={["Alert", "itemAddFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
@@ -82,7 +83,7 @@ const ShoppingListDetail = createVisualComponent({
         await props.detailDataObject.handlerMap.deleteItem(listId, itemId);
       } catch (error) {
         addAlert({
-          message: `List delete failed.`,
+          message: <Lsi import={importLsi} path={["Alert", "itemDelFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
@@ -96,7 +97,7 @@ const ShoppingListDetail = createVisualComponent({
         await listDataObject.handlerMap.update(listDataObject.data);
       } catch (error) {
         addAlert({
-          message: `List update failed.`,
+          message: <Lsi import={importLsi} path={["Alert", "updateFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
@@ -108,7 +109,7 @@ const ShoppingListDetail = createVisualComponent({
         await props.detailDataObject.handlerMap.addMember(listId, e.data.value.memberUuId, e.data.value.memberName);
       } catch (error) {
         addAlert({
-          message: `Adding member failed.`,
+          message: <Lsi import={importLsi} path={["Alert", "memberAddFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
@@ -121,7 +122,7 @@ const ShoppingListDetail = createVisualComponent({
         await props.detailDataObject.handlerMap.deleteMember(listId, memberUuId);
       } catch (error) {
         addAlert({
-          message: `Removing member failed.`,
+          message: <Lsi import={importLsi} path={["Alert", "memberRemFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
@@ -182,7 +183,7 @@ const ShoppingListDetail = createVisualComponent({
         />
 
         <Uu5Elements.LinkPanel
-          header="Show checked"
+          header={<Lsi import={importLsi} path={["Detail", "checked"]} />}
           open={checkedOpen}
           onChange={() => setCheckedOpen(!checkedOpen)}
           className={Css.panel()}

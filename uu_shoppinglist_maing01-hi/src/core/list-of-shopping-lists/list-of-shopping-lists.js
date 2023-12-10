@@ -1,5 +1,6 @@
 //@@viewOn:imports
-import { createVisualComponent, useSession, useState } from "uu5g05";
+import { createVisualComponent, useSession, useState, Lsi, useAppBackground } from "uu5g05";
+import importLsi from "../../lsi/import-lsi";
 import Uu5Elements from "uu5g05-elements";
 import Config from "../config/config.js";
 import ShoppingListTile from "./shopping-list-tile.js";
@@ -58,15 +59,15 @@ const ListOfShoppingLists = createVisualComponent({
         result = await props.shoppinglistDataList.handlerMap.create(newList);
       } catch (error) {
         addAlert({
-          header: "List creation failed!",
-          message: error.message,
+          message: <Lsi import={importLsi} path={["Alert", "createFail"]} />,
           priority: "error",
+          durationMs: 4000,
         });
         return;
       }
 
       addAlert({
-        message: `List ${result.name} has been created.`,
+        message: <Lsi import={importLsi} path={["Alert", "createSuccess"]} params={[result.name]} />,
         priority: "success",
         durationMs: 4000,
       });
@@ -79,14 +80,14 @@ const ListOfShoppingLists = createVisualComponent({
         await props.shoppinglistDataList.handlerMap.delete(id);
       } catch (error) {
         addAlert({
-          message: `List delete failed!`,
+          message: <Lsi import={importLsi} path={["Alert", "deleteFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
         return;
       }
       addAlert({
-        message: `List has been deleted.`,
+        message: <Lsi import={importLsi} path={["Alert", "deleteSuccess"]} />,
         priority: "success",
         durationMs: 4000,
       });
@@ -100,7 +101,7 @@ const ListOfShoppingLists = createVisualComponent({
         await listDataObject.handlerMap.update(listDataObject.data);
       } catch (error) {
         addAlert({
-          message: `List update failed.`,
+          message: <Lsi import={importLsi} path={["Alert", "updateFail"]} />,
           priority: "error",
           durationMs: 4000,
         });
@@ -118,7 +119,7 @@ const ListOfShoppingLists = createVisualComponent({
               setModalOpenCreateList(true);
             }}
           >
-            Create New List
+            <Lsi import={importLsi} path={["List", "create"]} />
           </Uu5Elements.Button>
         }
       >
@@ -137,26 +138,27 @@ const ListOfShoppingLists = createVisualComponent({
         )}
         <Uu5Elements.Modal
           {...props}
-          header="Create New List"
+          header={<Lsi import={importLsi} path={["List", "create"]} />}
           open={modalOpenCreateList}
           onClose={() => setModalOpenCreateList(false)}
         >
           <FormCreateList setModalOpenCreateList={setModalOpenCreateList} handleListCreate={handleListCreate} />
         </Uu5Elements.Modal>
         <Uu5Elements.Dialog
+          style={{ backgroundColor: useAppBackground()[0] === "dark" ? "#404040" : null }}
           open={modalOpen}
           onClose={() => setModalOpen(false)}
-          header="Confirm deletion?"
+          header={<Lsi import={importLsi} path={["List", "deleteTextHeader"]} />}
           icon={<Uu5Elements.Svg code="uugdssvg-svg-delete" />}
-          info="This step cannot be undone."
+          info={<Lsi import={importLsi} path={["List", "deleteText"]} />}
           actionDirection="horizontal"
           actionList={[
             {
-              children: "Cancel",
+              children: <Lsi import={importLsi} path={["List", "cancelBtn"]} />,
               significance: "distinct",
             },
             {
-              children: "Delete",
+              children: <Lsi import={importLsi} path={["List", "deleteBtn"]} />,
               onClick: () => handleListDelete(currentListId),
               colorScheme: "red",
               significance: "highlighted",
@@ -165,7 +167,7 @@ const ListOfShoppingLists = createVisualComponent({
         />
         <br />
         <Uu5Elements.Toggle
-          label="Archived"
+          label={<Lsi import={importLsi} path={["List", "archived"]} />}
           value={!hideArchived}
           onChange={() => {
             setHideArchived(!hideArchived);
