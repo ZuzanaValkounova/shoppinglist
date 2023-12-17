@@ -6,6 +6,8 @@ import Config from "../config/config.js";
 import ShoppingListTile from "./shopping-list-tile.js";
 import FormCreateList from "./form-create-list.js";
 import { useAlertBus } from "uu5g05-elements";
+import { PieChart } from "uu5chartsg01";
+import { XyChart } from "uu5chartsg01";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -41,12 +43,17 @@ const ListOfShoppingLists = createVisualComponent({
     const { addAlert } = useAlertBus();
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalChartOpen, setModalChartOpen] = useState(false);
     const [modalOpenCreateList, setModalOpenCreateList] = useState(false);
     const [currentListId, setCurrentListId] = useState("");
     const [hideArchived, setHideArchived] = useState(true);
 
     const { identity } = useSession();
 
+    const chartData = shoppinglistList.map((list) => {
+      return { name: list.data.name, sum: list.data.items.length };
+    });
+    // {name: "1", solvedItems: "5", undolvedItems: "6"}];
     async function handleListCreate(e) {
       let newList = {
         name: e.data.value.listName,
@@ -113,14 +120,23 @@ const ListOfShoppingLists = createVisualComponent({
     return (
       <Uu5Elements.Block
         header={
-          <Uu5Elements.Button
-            style={{ float: "right", marginLeft: "5px" }}
-            onClick={() => {
-              setModalOpenCreateList(true);
-            }}
-          >
-            <Lsi import={importLsi} path={["List", "create"]} />
-          </Uu5Elements.Button>
+          <>
+            <Uu5Elements.Button
+              style={{ float: "right", marginLeft: "5px" }}
+              icon="uugdsstencil-chart-pie-chart"
+              onClick={() => {
+                setModalChartOpen(true);
+              }}
+            ></Uu5Elements.Button>
+            <Uu5Elements.Button
+              style={{ float: "right", marginLeft: "5px" }}
+              onClick={() => {
+                setModalOpenCreateList(true);
+              }}
+            >
+              <Lsi import={importLsi} path={["List", "create"]} />
+            </Uu5Elements.Button>
+          </>
         }
       >
         {shoppinglistList.map((list, index) =>
@@ -189,6 +205,24 @@ const ListOfShoppingLists = createVisualComponent({
             ) : null
           )}
         </Uu5Elements.CollapsibleBox>
+        <Uu5Elements.Modal
+          open={modalChartOpen}
+          onClose={() => setModalChartOpen(false)}
+          header={<Lsi lsi={{ cs: "Počet položek v listech", en: "Number Of Items In A List" }} />}
+        >
+          <XyChart
+            data={chartData}
+            serieList={[
+              {
+                valueKey: "sum",
+                bar: true,
+              },
+            ]}
+            labelAxis={{ dataKey: "name" }}
+            layout="vertical"
+            height="600px"
+          />
+        </Uu5Elements.Modal>
       </Uu5Elements.Block>
     );
     //@@viewOff:render

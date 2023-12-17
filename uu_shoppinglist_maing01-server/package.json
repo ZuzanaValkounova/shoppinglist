@@ -6,7 +6,8 @@
   "spec": "nodejs-app; uu_appg01_devkit@5.15.4",
   "dependencies": {
     "uu_appg01_server": "^5.18.0",
-    "uu_apprepresentationg01": "^2.2.0"
+    "uu_apprepresentationg01": "^2.2.0",
+    "uu5chartsg01": "^3.4.0"
   },
   "devDependencies": {
     "uu_appg01_devkit": "^5.15.4",
