@@ -58,6 +58,7 @@
   "Detail": {
     "checked": "Show Checked",
     "members": "Members",
-    "add": "Add"
+    "add": "Add",
+    "chart": "Solved Items Chart"
   }
 }

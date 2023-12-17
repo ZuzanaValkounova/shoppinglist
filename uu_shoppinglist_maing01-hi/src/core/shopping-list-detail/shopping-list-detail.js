@@ -7,6 +7,7 @@ import TextInput from "./text-input";
 import MemberManager from "./member-manager";
 import { useAlertBus } from "uu5g05-elements";
 import Item from "./item.js";
+import { PieChart } from "uu5chartsg01";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -44,13 +45,23 @@ const ShoppingListDetail = createVisualComponent({
     const [route, setRoute] = useRoute();
     const [name, setName] = useState(listDataObject.data.name);
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalChartOpen, setModalChartOpen] = useState(false);
     const [newItem, setNewItem] = useState("");
+    const [checkedOpen, setCheckedOpen] = useState(false);
 
     const listId = route.params.id;
     const { identity } = useSession();
     const isOwner = identity?.uuIdentity === listDataObject.data.creatorUuId;
+    const chartData = [
+      { solved: <Lsi lsi={{ cs: "Vyřešeno", en: "Solved" }} />, sum: 0 },
+      { solved: <Lsi lsi={{ cs: "Nevyřešeno", en: "Unsolved" }} />, sum: 0 },
+    ];
 
-    const [checkedOpen, setCheckedOpen] = useState(false);
+    {
+      listDataObject.data.items.map((item) => {
+        item.solved ? (chartData[0].sum += 1) : (chartData[1].sum += 1);
+      });
+    }
 
     async function handleUpdateItem(itemName, itemId, itemSolved) {
       try {
@@ -155,6 +166,7 @@ const ShoppingListDetail = createVisualComponent({
             children: listDataObject.data.creatorName,
             onClick: () => setModalOpen(true),
           },
+          { icon: "uugdsstencil-chart-pie-chart", onClick: () => setModalChartOpen(true) },
         ]}
         headerSeparator={true}
       >
@@ -212,6 +224,23 @@ const ShoppingListDetail = createVisualComponent({
           handleAddMember={handleAddMember}
           identity={identity.uuIdentity}
         />
+
+        <Uu5Elements.Modal
+          open={modalChartOpen}
+          onClose={() => setModalChartOpen(false)}
+          header={<Lsi import={importLsi} path={["Detail", "chart"]} />}
+        >
+          <PieChart
+            data={chartData}
+            serieList={[
+              {
+                valueKey: "sum",
+                labelKey: "solved",
+                label: true,
+              },
+            ]}
+          />
+        </Uu5Elements.Modal>
       </Uu5Elements.Block>
     );
     //@@viewOff:render
